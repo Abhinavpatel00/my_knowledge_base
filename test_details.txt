@@ -1,0 +1,1900 @@
+==== gcc C c89 O0 ====
+Command: gcc -std=c89 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c89_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c89 O1 ====
+Command: gcc -std=c89 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c89_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c89 O2 ====
+Command: gcc -std=c89 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c89_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c89 O3 ====
+Command: gcc -std=c89 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c89_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c89 Os ====
+Command: gcc -std=c89 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c89_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c99 O0 ====
+Command: gcc -std=c99 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c99_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c99 O1 ====
+Command: gcc -std=c99 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c99_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c99 O2 ====
+Command: gcc -std=c99 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c99_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c99 O3 ====
+Command: gcc -std=c99 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c99_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c99 Os ====
+Command: gcc -std=c99 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c99_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c11 O0 ====
+Command: gcc -std=c11 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c11_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c11 O1 ====
+Command: gcc -std=c11 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c11_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c11 O2 ====
+Command: gcc -std=c11 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c11_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c11 O3 ====
+Command: gcc -std=c11 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c11_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c11 Os ====
+Command: gcc -std=c11 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c11_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c17 O0 ====
+Command: gcc -std=c17 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c17_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c17 O1 ====
+Command: gcc -std=c17 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c17_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c17 O2 ====
+Command: gcc -std=c17 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c17_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c17 O3 ====
+Command: gcc -std=c17 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c17_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c17 Os ====
+Command: gcc -std=c17 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c17_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c23 O0 ====
+Command: gcc -std=c23 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c23_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c23 O1 ====
+Command: gcc -std=c23 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c23_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c23 O2 ====
+Command: gcc -std=c23 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c23_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c23 O3 ====
+Command: gcc -std=c23 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c23_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C c23 Os ====
+Command: gcc -std=c23 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_c23_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu89 O0 ====
+Command: gcc -std=gnu89 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu89_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu89 O1 ====
+Command: gcc -std=gnu89 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu89_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu89 O2 ====
+Command: gcc -std=gnu89 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu89_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu89 O3 ====
+Command: gcc -std=gnu89 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu89_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu89 Os ====
+Command: gcc -std=gnu89 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu89_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu99 O0 ====
+Command: gcc -std=gnu99 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu99_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu99 O1 ====
+Command: gcc -std=gnu99 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu99_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu99 O2 ====
+Command: gcc -std=gnu99 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu99_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu99 O3 ====
+Command: gcc -std=gnu99 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu99_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu99 Os ====
+Command: gcc -std=gnu99 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu99_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu11 O0 ====
+Command: gcc -std=gnu11 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu11_O0
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu11 O1 ====
+Command: gcc -std=gnu11 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu11_O1
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu11 O2 ====
+Command: gcc -std=gnu11 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu11_O2
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu11 O3 ====
+Command: gcc -std=gnu11 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu11_O3
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== gcc C gnu11 Os ====
+Command: gcc -std=gnu11 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_gcc_gnu11_Os
+--- Compile Output ---
+demo/hm.c: In function ‘ok’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+--- Runtime Output ---
+33333
+==== clang C c89 O0 ====
+Command: clang -std=c89 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c89_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c89 O1 ====
+Command: clang -std=c89 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c89_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c89 O2 ====
+Command: clang -std=c89 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c89_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c89 O3 ====
+Command: clang -std=c89 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c89_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c89 Os ====
+Command: clang -std=c89 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c89_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c99 O0 ====
+Command: clang -std=c99 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c99_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c99 O1 ====
+Command: clang -std=c99 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c99_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c99 O2 ====
+Command: clang -std=c99 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c99_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c99 O3 ====
+Command: clang -std=c99 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c99_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c99 Os ====
+Command: clang -std=c99 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c99_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c11 O0 ====
+Command: clang -std=c11 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c11_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c11 O1 ====
+Command: clang -std=c11 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c11_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c11 O2 ====
+Command: clang -std=c11 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c11_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c11 O3 ====
+Command: clang -std=c11 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c11_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c11 Os ====
+Command: clang -std=c11 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c11_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c17 O0 ====
+Command: clang -std=c17 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c17_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c17 O1 ====
+Command: clang -std=c17 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c17_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c17 O2 ====
+Command: clang -std=c17 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c17_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c17 O3 ====
+Command: clang -std=c17 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c17_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c17 Os ====
+Command: clang -std=c17 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c17_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C c23 O0 ====
+Command: clang -std=c23 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c23_O0
+--- Compile Output ---
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang C c23 O1 ====
+Command: clang -std=c23 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c23_O1
+--- Compile Output ---
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang C c23 O2 ====
+Command: clang -std=c23 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c23_O2
+--- Compile Output ---
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang C c23 O3 ====
+Command: clang -std=c23 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c23_O3
+--- Compile Output ---
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang C c23 Os ====
+Command: clang -std=c23 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_c23_Os
+--- Compile Output ---
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang C gnu89 O0 ====
+Command: clang -std=gnu89 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu89_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu89 O1 ====
+Command: clang -std=gnu89 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu89_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu89 O2 ====
+Command: clang -std=gnu89 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu89_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu89 O3 ====
+Command: clang -std=gnu89 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu89_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu89 Os ====
+Command: clang -std=gnu89 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu89_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu99 O0 ====
+Command: clang -std=gnu99 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu99_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu99 O1 ====
+Command: clang -std=gnu99 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu99_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu99 O2 ====
+Command: clang -std=gnu99 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu99_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu99 O3 ====
+Command: clang -std=gnu99 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu99_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu99 Os ====
+Command: clang -std=gnu99 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu99_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu11 O0 ====
+Command: clang -std=gnu11 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu11_O0
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu11 O1 ====
+Command: clang -std=gnu11 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu11_O1
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu11 O2 ====
+Command: clang -std=gnu11 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu11_O2
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu11 O3 ====
+Command: clang -std=gnu11 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu11_O3
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== clang C gnu11 Os ====
+Command: clang -std=gnu11 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang_gnu11_Os
+--- Compile Output ---
+demo/hm.c:2:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    2 | void ok()
+      |        ^
+      |         void
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+demo/hm.c:7:9: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | int main()
+      |         ^
+      |          void
+3 warnings generated.
+--- Runtime Output ---
+33333
+==== g++ C++ c++98 O0 ====
+Command: g++ -std=c++98 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++98_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++98 O1 ====
+Command: g++ -std=c++98 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++98_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++98 O2 ====
+Command: g++ -std=c++98 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++98_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++98 O3 ====
+Command: g++ -std=c++98 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++98_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++98 Os ====
+Command: g++ -std=c++98 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++98_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++11 O0 ====
+Command: g++ -std=c++11 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++11_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++11 O1 ====
+Command: g++ -std=c++11 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++11_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++11 O2 ====
+Command: g++ -std=c++11 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++11_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++11 O3 ====
+Command: g++ -std=c++11 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++11_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++11 Os ====
+Command: g++ -std=c++11 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++11_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++14 O0 ====
+Command: g++ -std=c++14 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++14_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++14 O1 ====
+Command: g++ -std=c++14 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++14_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++14 O2 ====
+Command: g++ -std=c++14 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++14_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++14 O3 ====
+Command: g++ -std=c++14 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++14_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++14 Os ====
+Command: g++ -std=c++14 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++14_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++17 O0 ====
+Command: g++ -std=c++17 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++17_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++17 O1 ====
+Command: g++ -std=c++17 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++17_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++17 O2 ====
+Command: g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++17_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++17 O3 ====
+Command: g++ -std=c++17 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++17_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++17 Os ====
+Command: g++ -std=c++17 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++17_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++20 O0 ====
+Command: g++ -std=c++20 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++20_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++20 O1 ====
+Command: g++ -std=c++20 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++20_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++20 O2 ====
+Command: g++ -std=c++20 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++20_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++20 O3 ====
+Command: g++ -std=c++20 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++20_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++20 Os ====
+Command: g++ -std=c++20 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++20_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++23 O0 ====
+Command: g++ -std=c++23 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++23_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++23 O1 ====
+Command: g++ -std=c++23 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++23_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++23 O2 ====
+Command: g++ -std=c++23 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++23_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++23 O3 ====
+Command: g++ -std=c++23 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++23_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++23 Os ====
+Command: g++ -std=c++23 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++23_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++26 O0 ====
+Command: g++ -std=c++26 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++26_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++26 O1 ====
+Command: g++ -std=c++26 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++26_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++26 O2 ====
+Command: g++ -std=c++26 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++26_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++26 O3 ====
+Command: g++ -std=c++26 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++26_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ c++26 Os ====
+Command: g++ -std=c++26 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_c++26_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++17 O0 ====
+Command: g++ -std=gnu++17 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++17_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++17 O1 ====
+Command: g++ -std=gnu++17 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++17_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++17 O2 ====
+Command: g++ -std=gnu++17 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++17_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++17 O3 ====
+Command: g++ -std=gnu++17 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++17_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++17 Os ====
+Command: g++ -std=gnu++17 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++17_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++20 O0 ====
+Command: g++ -std=gnu++20 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++20_O0
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++20 O1 ====
+Command: g++ -std=gnu++20 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++20_O1
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++20 O2 ====
+Command: g++ -std=gnu++20 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++20_O2
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++20 O3 ====
+Command: g++ -std=gnu++20 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++20_O3
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== g++ C++ gnu++20 Os ====
+Command: g++ -std=gnu++20 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_g++_gnu++20_Os
+--- Compile Output ---
+demo/hm.c: In function ‘void ok()’:
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+    5 |     a = a++ & printf("%d", a);
+      |     ~~^~~~~~~~~~~~~~~~~~~~~~~
+demo/hm.c:5:7: warning: operation on ‘a’ may be undefined [-Wsequence-point]
+--- Runtime Output ---
+33333
+==== clang++ C++ c++98 O0 ====
+Command: clang++ -std=c++98 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++98_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++98 O1 ====
+Command: clang++ -std=c++98 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++98_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++98 O2 ====
+Command: clang++ -std=c++98 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++98_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++98 O3 ====
+Command: clang++ -std=c++98 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++98_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++98 Os ====
+Command: clang++ -std=c++98 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++98_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++11 O0 ====
+Command: clang++ -std=c++11 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++11_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++11 O1 ====
+Command: clang++ -std=c++11 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++11_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++11 O2 ====
+Command: clang++ -std=c++11 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++11_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++11 O3 ====
+Command: clang++ -std=c++11 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++11_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++11 Os ====
+Command: clang++ -std=c++11 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++11_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++14 O0 ====
+Command: clang++ -std=c++14 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++14_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++14 O1 ====
+Command: clang++ -std=c++14 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++14_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++14 O2 ====
+Command: clang++ -std=c++14 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++14_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++14 O3 ====
+Command: clang++ -std=c++14 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++14_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++14 Os ====
+Command: clang++ -std=c++14 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++14_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++17 O0 ====
+Command: clang++ -std=c++17 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++17_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++17 O1 ====
+Command: clang++ -std=c++17 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++17_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++17 O2 ====
+Command: clang++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++17_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++17 O3 ====
+Command: clang++ -std=c++17 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++17_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++17 Os ====
+Command: clang++ -std=c++17 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++17_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++20 O0 ====
+Command: clang++ -std=c++20 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++20_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++20 O1 ====
+Command: clang++ -std=c++20 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++20_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++20 O2 ====
+Command: clang++ -std=c++20 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++20_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++20 O3 ====
+Command: clang++ -std=c++20 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++20_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++20 Os ====
+Command: clang++ -std=c++20 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++20_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++23 O0 ====
+Command: clang++ -std=c++23 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++23_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++23 O1 ====
+Command: clang++ -std=c++23 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++23_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++23 O2 ====
+Command: clang++ -std=c++23 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++23_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++23 O3 ====
+Command: clang++ -std=c++23 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++23_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++23 Os ====
+Command: clang++ -std=c++23 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++23_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++26 O0 ====
+Command: clang++ -std=c++26 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++26_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++26 O1 ====
+Command: clang++ -std=c++26 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++26_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++26 O2 ====
+Command: clang++ -std=c++26 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++26_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++26 O3 ====
+Command: clang++ -std=c++26 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++26_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ c++26 Os ====
+Command: clang++ -std=c++26 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_c++26_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++17 O0 ====
+Command: clang++ -std=gnu++17 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++17_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++17 O1 ====
+Command: clang++ -std=gnu++17 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++17_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++17 O2 ====
+Command: clang++ -std=gnu++17 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++17_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++17 O3 ====
+Command: clang++ -std=gnu++17 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++17_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++17 Os ====
+Command: clang++ -std=gnu++17 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++17_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++20 O0 ====
+Command: clang++ -std=gnu++20 -O0 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++20_O0
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++20 O1 ====
+Command: clang++ -std=gnu++20 -O1 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++20_O1
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++20 O2 ====
+Command: clang++ -std=gnu++20 -O2 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++20_O2
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++20 O3 ====
+Command: clang++ -std=gnu++20 -O3 -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++20_O3
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
+==== clang++ C++ gnu++20 Os ====
+Command: clang++ -std=gnu++20 -Os -Wall -Wextra -Wpedantic -fsanitize=address,undefined demo/hm.c -o tmp_clang++_gnu++20_Os
+--- Compile Output ---
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+demo/hm.c:5:10: warning: unsequenced modification and access to 'a' [-Wunsequenced]
+    5 |     a = a++ & printf("%d", a);
+      |          ^                 ~
+1 warning generated.
+--- Runtime Output ---
+33333
