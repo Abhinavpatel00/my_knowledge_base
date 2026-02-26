@@ -1,6 +1,6 @@
 
 // inline struct 
-// might be useful
+// might be useful for like passinng pushconstant data
 struct { float x, y; } make_vec2(float x, float y)
 {
     return (struct { float x, y; }){ x, y };
@@ -170,7 +170,6 @@ int main() {
 
 this is v good  https://www.slideshare.net/slideshow/deep-c-programming/26451627
 https://www.slideshare.net/slideshow/insecure-coding-in-c-and-c/35699341
-
 https://c-faq.com/
 
 

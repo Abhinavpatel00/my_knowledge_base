@@ -69,6 +69,14 @@ LFE1	ok.s	/^.LFE1:$/;"	l
 Lubsan_data0	ok.s	/^.Lubsan_data0:$/;"	l
 Lubsan_data1	ok.s	/^.Lubsan_data1:$/;"	l
 Lubsan_type0	ok.s	/^.Lubsan_type0:$/;"	l
+define	codestyleandsemantics.md	/^#define DRAW_TYPES                         \\$/;"	h	section:};
+define	codestyleandsemantics.md	/^#define X(name) DRAW_##name,$/;"	h	section:};
+define	codestyleandsemantics.md	/^#define X(name) \\$/;"	h	section:};
+define	codestyleandsemantics.md	/^#define X(name) draw_##name,$/;"	h	section:};
+include	c.md	/^#include <iostream>$/;"	h
+include	codestyleandsemantics.md	/^#include <stdint.h>$/;"	h	section:};
+include	codestyleandsemantics.md	/^#include <stdio.h>$/;"	h	section:};
+include	codestyleandsemantics.md	/^#include <vulkan\/vulkan.h>$/;"	h	section:};
 main	demo/hm.c	/^int main()$/;"	f	typeref:typename:int
 main	demo/ok.c	/^int main()$/;"	f	typeref:typename:int
 main	demo/rand.c	/^int main(void)$/;"	f	typeref:typename:int
@@ -79,6 +87,13 @@ ok	demo/hm.c	/^void ok()$/;"	f	typeref:typename:void
 ok	demo/ok.c	/^void ok()$/;"	f	typeref:typename:void
 ok	ok.s	/^	.globl	ok$/;"	s	inputSection:.rodata
 ok	ok.s	/^ok:$/;"	l
+pop	algo.md	/^- stack permutation is #push ≥ #pop$/;"	h
+pop	algo.md	/^Sequences where at some point: #pop > #push (2n)C(n+1) $/;"	h
+push	algo.md	/^- stack permutation is #push ≥ #pop$/;"	h
+push	algo.md	/^Sequences where at some point: #pop > #push (2n)C(n+1) $/;"	h
 run_matrix	compile.sh	/^run_matrix() {$/;"	f
 run_matrix	compilead.sh	/^run_matrix() {$/;"	f
 sanitize_output	compilead.sh	/^sanitize_output() {$/;"	f
+undef	codestyleandsemantics.md	/^#undef X$/;"	h	section:};
+}	codestyleandsemantics.md	/^}$/;"	s
+};	codestyleandsemantics.md	/^};$/;"	s

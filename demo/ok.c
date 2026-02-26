@@ -8,6 +8,8 @@ void ok()
     a++;
     printf("%d", a);
 }
+
+
 int main()
 {
 
