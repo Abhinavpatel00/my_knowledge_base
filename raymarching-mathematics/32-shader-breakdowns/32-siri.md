@@ -1,3636 +1,1617 @@
-# Mathematical Derivation of the Golfed Raymarching Shader
+# Mathematical Formulation of the Golfed Raymarching Shader
 
-The shader
+The shader is
 
-\[
-\texttt{vec3 p,a;}
-\]
+```glsl
+vec3 p,a;
+for(float i,z,d,s;z+i++<2e2;o+=max(cos(p.x*.4+vec4(0,2,4,0)),5./s/s)/d/d)
+    p=z*normalize(FC.rgb*2.-r.xyy),
+    p.z+=9.,
+    s=length(p=dot(a=normalize(cos(vec3(0,2,4)-t*.5+s*.3)),p)*a-cross(a,p)),
+    z+=d=min(abs(dot(p,sin(p).yzx))*.2+max(d=s-5.,.1),abs(--d)+.2)*.2;
+o=tanh(o/3e4);
+```
 
-\[
-\texttt{for(float i,z,d,s;z+i++<2e2;o+=max(cos(p.x*.4+vec4(0,2,4,0)),5./s/s)/d/d)}
-\]
+> **Important implementation note.** The mathematical derivation below assumes the intended scalar state starts at $i_0=z_0=d_0=s_0=0$. The compact shader declaration does not itself make those initialization semantics explicit. The derivation therefore describes the intended recurrence rather than relying on unspecified language behavior.
 
-\[
-\texttt{p=z*normalize(FC.rgb*2.-r.xyy),}
-\]
+## 1. Mathematical Overview
 
-\[
-\texttt{p.z+=9.,}
-\]
+The shader can be understood as a composition of four major systems:
 
-\[
-\texttt{s=length(p=dot(a=normalize(cos(vec3(0,2,4)-t*.5+s*.3)),p)*a-cross(a,p)),}
-\]
+1. A camera ray parameterization.
+2. A radius-dependent rotation field.
+3. A hybrid implicit distance estimator.
+4. A singular glow accumulation followed by nonlinear tone mapping.
 
-\[
-\texttt{z+=d=min(abs(dot(p,sin(p).yzx))*.2+max(d=s-5.,.1),abs(--d)+.2)*.2;}
-\]
+At the highest level,
 
-\[
-\texttt{o=tanh(o/3e4);}
-\]
+$$
+\boxed{
+\text{ray}
+\rightarrow
+\text{domain warp}
+\rightarrow
+\text{implicit field}
+\rightarrow
+\text{distance estimate}
+\rightarrow
+\text{ray march}
+\rightarrow
+\text{radiance accumulation}
+\rightarrow
+\text{tone mapping}
+}
+$$
 
-is essentially a compact procedural ray marcher built from four mathematical ideas:
-
-1. ray parametrization;
-2. a state-dependent rotation in \(SO(3)\);
-3. a hybrid trigonometric/radial distance estimator;
-4. a singular glow accumulation followed by nonlinear tone mapping.
-
-The code is brutally compressed, but mathematically it is much cleaner than its syntax suggests.
-
-There is one important caveat before deriving it:
-
-\[
-\boxed{\text{The intended mathematical model assumes }i_0=z_0=d_0=s_0=0.}
-\]
-
-The declarations
-
-\[
-\texttt{float i,z,d,s;}
-\]
-
-do not themselves communicate these initial values. A shader dialect or implementation that does not initialize local variables deterministically makes the literal program formally under-specified. In particular, \(s\) is used while constructing the first rotation axis, so the mathematical recurrence needs an initial \(s_0\). The natural intended choice is
-
-\[
-i_0=z_0=d_0=s_0=0.
-\]
-
-The symbols \(FC,r,t,o\) are treated abstractly because their precise definitions are outside the supplied fragment. In a Shadertoy-style interpretation one normally has
-
-\[
-FC=\text{fragment coordinate},
-\qquad
-r=\text{resolution},
-\qquad
-t=\text{time}.
-\]
+The important idea is that the shader is not built from one mysterious geometric equation. It is built by composing comparatively simple mathematical operators.
 
 ---
 
-# 1. The Shader as a Dynamical System
+## 2. Ray Parameterization
 
-The most useful way to understand the shader is not as a sequence of assignments but as a discrete dynamical system.
+Let the normalized camera direction be
 
-Define the ray parameter at iteration \(n\) by
-
-\[
-z_n\in\mathbb R.
-\]
-
-Define the camera ray direction
-
-\[
+$$
 \hat{\omega}
 =
-\operatorname{normalize}
-\left(
-2FC-r_{xyy}
-\right),
-\]
+\frac{2FC-r_{xyy}}{\left\|2FC-r_{xyy}\right\|},
+$$
 
 where
 
-\[
+$$
 r_{xyy}=(r_x,r_y,r_y).
-\]
+$$
 
-The pre-warped spatial point is
+The ray-space point at accumulated distance $z$ is
 
-\[
-q_n
-=
-z_n\hat{\omega}
-+
-9e_z,
-\]
-
-where
-
-\[
-e_z=(0,0,1).
-\]
-
-Thus the ray is
-
-\[
-q(z)=z\hat{\omega}+9e_z.
-\]
-
-The shader therefore does **not** begin by constructing a conventional object centered at the camera.
-
-Instead, it casts rays from the camera into a coordinate system whose geometry is effectively shifted by \(9\) units in the \(z\)-direction.
-
-The complete recurrence will eventually become
-
-\[
+$$
 \boxed{
-z_{n+1}=z_n+D(q_n,s_n)
+q(z)=z\hat{\omega}+9e_z
 }
-\]
+$$
 
 with
 
-\[
-\boxed{
-s_n=S(q_n)
-}
-\]
+$$
+ e_z=(0,0,1).
+$$
 
-and a state-dependent spatial transformation
+Since $\hat{\omega}$ is normalized,
 
-\[
-q_n\mapsto x_n.
-\]
+$$
+\left\|\hat{\omega}\right\|=1.
+$$
 
-The entire shader can therefore be interpreted as a discrete trajectory
+Therefore $z$ acts as a unit-speed affine ray parameter.
 
-\[
-z_0
-\longrightarrow
-z_1
-\longrightarrow
-z_2
-\longrightarrow
-\cdots
-\]
+The derivative is
 
-through a procedurally defined scalar field.
-
----
-
-# 2. Ray Parameterization
-
-The fundamental ray equation is
-
-\[
-q(z)=z\hat{\omega}+9e_z.
-\]
-
-This is the usual affine parameterization of a line in Euclidean space:
-
-\[
-q(z)=q_0+z\hat{\omega},
-\]
-
-with
-
-\[
-q_0=9e_z.
-\]
-
-Since \(\hat{\omega}\) is normalized,
-
-\[
-\|\hat{\omega}\|=1.
-\]
-
-Therefore
-
-\[
-z
-\]
-
-has the geometric interpretation of a ray-distance parameter.
-
-The corresponding derivative is
-
-\[
+$$
 \frac{dq}{dz}=\hat{\omega}.
-\]
+$$
 
-Consequently the ray is traversed with unit speed in the original ray space.
-
----
-
-# 3. A Hidden Simplification: \(s\) Is Radial
-
-The shader contains the apparently complicated expression
-
-\[
-s
-=
-\left\|
-(a\cdot q)a-a\times q
-\right\|.
-\]
-
-At first glance this looks like an arbitrary nonlinear deformation.
-
-It is not.
-
-The vector
-
-\[
-(a\cdot q)a-a\times q
-\]
-
-is exactly a rotation of \(q\) through angle
-
-\[
--\frac{\pi}{2}
-\]
-
-around the unit axis \(a\).
-
-This will be derived shortly.
-
-Because rotations preserve Euclidean norm,
-
-\[
-\|Rq\|=\|q\|,
-\qquad
-R\in SO(3),
-\]
-
-we immediately obtain
-
-\[
-\boxed{
-s=\|q\|.
-}
-\]
-
-Therefore the apparently complicated definition of \(s\) collapses to
-
-\[
-s_n
-=
-\left\|
-z_n\hat{\omega}+9e_z
-\right\|.
-\]
-
-This is one of the most important structural observations in the entire shader.
-
-Expanding the norm gives
-
-\[
-s_n^2
-=
-\left\|
-z_n\hat{\omega}+9e_z
-\right\|^2.
-\]
-
-Because
-
-\[
-\|\hat{\omega}\|^2=1,
-\]
-
-we obtain
-
-\[
-s_n^2
-=
-z_n^2
-+
-18z_n\hat{\omega}_z
-+
-81.
-\]
-
-Hence
-
-\[
-\boxed{
-s_n
-=
-\sqrt{
-z_n^2
-+
-18z_n\hat{\omega}_z
-+
-81
-}.
-}
-\]
-
-So the feedback variable \(s\) is fundamentally a radial quantity.
-
-The geometry may look three-dimensional and chaotic, but the temporal/spatial feedback controlling the axis is actually driven by the scalar radial distance
-
-\[
-s=\|q\|.
-\]
+So the ray is a straight line in the unwarped coordinate system.
 
 ---
 
-# 4. The Rotation Hidden in the Shader
+## 3. The Hidden Structure of the Rotation
 
-The critical expression is
+The shader constructs the vector
 
-\[
-x
-=
+$$
 (a\cdot q)a-a\times q.
-\]
+$$
 
 Assume
 
-\[
+$$
 \|a\|=1.
-\]
+$$
 
-Recall Rodrigues' rotation formula:
+Rodrigues' rotation formula is
 
-\[
+$$
 R_a(\theta)q
 =
 q\cos\theta
-+
-(a\times q)\sin\theta
-+
-a(a\cdot q)(1-\cos\theta).
-\]
++(a\times q)\sin\theta
++a(a\cdot q)(1-\cos\theta).
+$$
 
-For
+Set
 
-\[
-\theta=-\frac{\pi}{2},
-\]
-
-we have
-
-\[
-\cos\left(-\frac{\pi}{2}\right)=0,
-\]
-
-and
-
-\[
-\sin\left(-\frac{\pi}{2}\right)=-1.
-\]
-
-Therefore
-
-\[
-R_a\left(-\frac{\pi}{2}\right)q
-=
-0
--
-a\times q
-+
-a(a\cdot q).
-\]
-
-Thus
-
-\[
-\boxed{
-R_a\left(-\frac{\pi}{2}\right)q
-=
-(a\cdot q)a-a\times q.
-}
-\]
-
-Exactly the expression appearing in the shader.
-
-Therefore the spatial transformation is
-
-\[
-\boxed{
-x
-=
-R_a\left(-\frac{\pi}{2}\right)q.
-}
-\]
-
-This is not merely a heuristic vector trick.
-
-It is a genuine element of the rotation group
-
-\[
-SO(3).
-\]
-
-The rotation matrix is
-
-\[
-R_a\left(-\frac{\pi}{2}\right)
-=
-aa^{T}
--
-[a]_\times,
-\]
-
-where
-
-\[
-[a]_\times
-=
-\begin{pmatrix}
-0 & -a_z & a_y\\
-a_z & 0 & -a_x\\
--a_y & a_x & 0
-\end{pmatrix}.
-\]
-
-Hence
-
-\[
-\boxed{
-R=aa^T-[a]_\times.
-}
-\]
-
-Since
-
-\[
-R^TR=I
-\]
-
-and
-
-\[
-\det R=1,
-\]
-
-we have
-
-\[
-R\in SO(3).
-\]
-
-Consequently
-
-\[
-\|x\|=\|q\|.
-\]
-
-That gives the earlier simplification
-
-\[
-\boxed{s=\|x\|=\|q\|.}
-\]
-
----
-
-# 5. Construction of the Rotation Axis
-
-The shader defines
-
-\[
-a
-=
-\operatorname{normalize}
-\left(
-\cos
-\left(
-\begin{pmatrix}
-0\\
-2\\
-4
-\end{pmatrix}
--\frac{t}{2}
-+
-0.3s
-\begin{pmatrix}
-1\\
-1\\
-1
-\end{pmatrix}
-\right)
-\right).
-\]
-
-Define the phase vector
-
-\[
-\phi(s,t)
-=
-\begin{pmatrix}
-0\\
-2\\
-4
-\end{pmatrix}
--\frac{t}{2}
-+
-0.3s
-\begin{pmatrix}
-1\\
-1\\
-1
-\end{pmatrix}.
-\]
-
-Equivalently,
-
-\[
-\phi(s,t)
-=
-\begin{pmatrix}
--\frac t2+0.3s\\
-2-\frac t2+0.3s\\
-4-\frac t2+0.3s
-\end{pmatrix}.
-\]
-
-Define
-
-\[
-c(s,t)
-=
-\cos\phi(s,t),
-\]
-
-componentwise:
-
-\[
-c(s,t)
-=
-\begin{pmatrix}
-\cos(-t/2+0.3s)\\
-\cos(2-t/2+0.3s)\\
-\cos(4-t/2+0.3s)
-\end{pmatrix}.
-\]
+$$
+\theta=-\frac{\pi}{2}.
+$$
 
 Then
 
-\[
+$$
+\cos\theta=0,
+\qquad
+\sin\theta=-1,
+$$
+
+and therefore
+
+$$
+R_a\left(-\frac{\pi}{2}\right)q
+=
+-a\times q+a(a\cdot q).
+$$
+
+Hence
+
+$$
 \boxed{
-a(s,t)
+(a\cdot q)a-a\times q
 =
-\frac{c(s,t)}
-{\|c(s,t)\|}.
+R_a\left(-\frac{\pi}{2}\right)q.
 }
-\]
+$$
 
-This creates a time-varying and radius-dependent orientation field.
+The shader is therefore performing an exact $90^\circ$ rotation around the unit axis $a$.
 
-The phase dependence is
+The corresponding rotation matrix is
 
-\[
-\frac{\partial \phi}{\partial t}
-=
--\frac12
-\begin{pmatrix}
-1\\1\\1
-\end{pmatrix},
-\]
-
-and
-
-\[
-\frac{\partial \phi}{\partial s}
-=
-0.3
-\begin{pmatrix}
-1\\1\\1
-\end{pmatrix}.
-\]
-
-Thus increasing either time or radius continuously rotates the phase of all three components.
-
-The three constant offsets
-
-\[
-0,\quad2,\quad4
-\]
-
-introduce a fixed phase separation between the spatial components.
-
-This produces a highly nontrivial orientation field even though the underlying formula is only componentwise cosine.
-
----
-
-# 6. The Complete Spatial Map
-
-The shader therefore defines the map
-
-\[
-q
-\mapsto
-x
-\]
-
-as
-
-\[
+$$
 \boxed{
-x(q,t)
-=
-R_{a(\|q\|,t)}
-\left(-\frac{\pi}{2}\right)q.
+R_a\left(-\frac{\pi}{2}\right)=aa^T-[a]_\times
 }
-\]
-
-Substituting the explicit axis:
-
-\[
-\boxed{
-x(q,t)
-=
-R_{\displaystyle
-\frac{\cos\left(
-(0,2,4)^T-\frac t2\mathbf 1+0.3\|q\|\mathbf 1
-\right)}
-{\left\|
-\cos\left(
-(0,2,4)^T-\frac t2\mathbf 1+0.3\|q\|\mathbf 1
-\right)
-\right\|}
-}
-\left(-\frac{\pi}{2}\right)
-q.
-}
-\]
+$$
 
 where
 
-\[
-\mathbf 1=
+$$
+[a]_\times
+=
 \begin{pmatrix}
-1\\1\\1
+0&-a_z&a_y\\
+ a_z&0&-a_x\\
+-a_y&a_x&0
 \end{pmatrix}.
-\]
+$$
 
-This is a nonlinear domain warp.
+It satisfies
 
-However, it is an unusual one.
+$$
+R_a^TR_a=I,
+\qquad
+\det R_a=1,
+$$
 
-At each radius \(s\), the transformation is an exact rigid rotation.
+so
 
-Thus locally, for fixed \(s\),
+$$
+R_a\in SO(3).
+$$
 
-\[
-\|x\|=\|q\|.
-\]
-
-The nonlinearity comes from the fact that the rotation axis itself changes with
-
-\[
-s=\|q\|.
-\]
-
-So the shader is best thought of as a **radially modulated rotation field**.
+Thus the transformation itself is a rigid rotation.
 
 ---
 
-# 7. The Trigonometric Geometry
+## 4. Why $s$ Simplifies to a Radius
 
-The next major expression is
+The shader writes
 
-\[
-\operatorname{dot}
-\left(
-p,
-\sin(p)^{yzx}
-\right).
-\]
+$$
+ s
+=
+\left\|
+(a\cdot q)a-a\times q
+\right\|.
+$$
+
+Because the expression inside the norm is a rotation of $q$,
+
+$$
+\left\|
+(a\cdot q)a-a\times q
+\right\|
+=
+\|q\|.
+$$
+
+Hence
+
+$$
+\boxed{s=\|q\|.}
+$$
+
+With
+
+$$
+q=z\hat{\omega}+9e_z,
+$$
+
+we get
+
+$$
+s^2
+=
+\left\|z\hat{\omega}+9e_z\right\|^2.
+$$
+
+Expanding,
+
+$$
+s^2
+=z^2\|\hat{\omega}\|^2
++18z\hat{\omega}_z
++81.
+$$
+
+Since $\|\hat{\omega}\|=1$,
+
+$$
+\boxed{
+s
+=
+\sqrt{z^2+18z\hat{\omega}_z+81}
+}
+$$
+
+Therefore the apparently complicated state variable $s$ is simply the radial distance of the current point from the origin.
+
+This is a major simplification.
+
+---
+
+## 5. Construction of the Rotation Axis
+
+Define
+
+$$
+\mathbf{1}
+=
+\begin{pmatrix}
+1\\1\\1
+\end{pmatrix}
+$$
+
+and
+
+$$
+\phi(s,t)
+=
+\begin{pmatrix}
+0\\2\\4
+\end{pmatrix}
+-
+\frac{t}{2}\mathbf{1}
++
+0.3s\mathbf{1}.
+$$
+
+Explicitly,
+
+$$
+\phi(s,t)
+=
+\begin{pmatrix}
+-\frac{t}{2}+0.3s\\
+2-\frac{t}{2}+0.3s\\
+4-\frac{t}{2}+0.3s
+\end{pmatrix}.
+$$
+
+The shader then constructs
+
+$$
+ c(s,t)=\cos\phi(s,t),
+$$
+
+componentwise, and normalizes it:
+
+$$
+\boxed{
+ a(s,t)
+=
+\frac{c(s,t)}{\|c(s,t)\|}.
+}
+$$
+
+Thus the rotation axis varies with both radius and time.
+
+The temporal phase velocity is
+
+$$
+\frac{\partial\phi}{\partial t}
+=-\frac12\mathbf{1},
+$$
+
+while the radial phase velocity is
+
+$$
+\frac{\partial\phi}{\partial s}
+=0.3\mathbf{1}.
+$$
+
+Therefore moving outward in space and advancing in time both shift the orientation field.
+
+---
+
+## 6. The Nonlinear Domain Warp
+
+Let
+
+$$
+q=q(z)
+$$
+
+and define
+
+$$
+\boxed{
+x(q,t)
+=
+R_{a(\|q\|,t)}\left(-\frac{\pi}{2}\right)q.
+}
+$$
+
+This is a position-dependent rotation field.
+
+For a fixed radius $s$, the transformation is a rigid rotation, so
+
+$$
+\|x\|=\|q\|=s.
+$$
+
+The nonlinearity does not come from the rotation itself. It comes from the fact that the rotation axis changes with position through
+
+$$
+a=a(\|q\|,t).
+$$
+
+This is a classic domain-warp construction:
+
+$$
+\boxed{
+\text{complex visible geometry}
+=
+\text{simple field}\circ\text{nonlinear coordinate map}.
+}
+$$
+
+---
+
+## 7. The Cyclic Trigonometric Implicit Field
 
 After the rotation, write
 
-\[
+$$
 x=(x,y,z).
-\]
+$$
 
-The permutation
+The shader evaluates
 
-\[
-\sin(p)^{yzx}
-\]
+$$
+\operatorname{dot}\left(x,\sin(x)^{yzx}\right).
+$$
 
-means
+The permutation $yzx$ means
 
-\[
+$$
+\sin(x)^{yzx}
+=
 \begin{pmatrix}
 \sin y\\
 \sin z\\
 \sin x
 \end{pmatrix}.
-\]
+$$
 
-Therefore
+Therefore the scalar field is
 
-\[
-g(x,y,z)
-=
-x\sin y+y\sin z+z\sin x.
-\]
-
-Hence
-
-\[
+$$
 \boxed{
-g(x,y,z)
+ g(x,y,z)
 =
 x\sin y+y\sin z+z\sin x.
 }
-\]
+$$
 
-The shader uses
+The corresponding implicit surface family is
 
-\[
-|g(x,y,z)|.
-\]
-
-Therefore the trigonometric surface family is generated by the implicit equation
-
-\[
+$$
 \boxed{
-g(x,y,z)=0.
+ g(x,y,z)=0.
 }
-\]
+$$
 
-This is an implicit periodic surface.
+This differs fundamentally from a sphere such as
 
-Unlike a sphere,
+$$
+x^2+y^2+z^2-R^2=0.
+$$
 
-\[
-x^2+y^2+z^2-R^2=0,
-\]
+Here the coordinates are cyclically coupled:
 
-it contains nonlinear coupling between different coordinate axes:
-
-\[
+$$
 x\leftrightarrow y,
 \qquad
 y\leftrightarrow z,
 \qquad
 z\leftrightarrow x.
-\]
+$$
 
-This cyclic coupling is responsible for much of the visual complexity.
+That coupling creates a periodic, non-separable geometry.
 
 ---
 
-# 8. Differential Geometry of the Trigonometric Surface
+## 8. Differential Geometry of the Base Surface
 
-The gradient of
+For
 
-\[
-g(x,y,z)
-=
-x\sin y+y\sin z+z\sin x
-\]
+$$
+g(x,y,z)=x\sin y+y\sin z+z\sin x,
+$$
 
-is
+the gradient is
 
-\[
+$$
+\boxed{
 \nabla g
 =
 \begin{pmatrix}
 \sin y+z\cos x\\
-x\cos y+\sin z\\
-y\cos z+\sin x
+ x\cos y+\sin z\\
+ y\cos z+\sin x
 \end{pmatrix}.
-\]
-
-Therefore
-
-\[
-\boxed{
-\nabla g(x,y,z)
-=
-\left(
-\sin y+z\cos x,\;
-x\cos y+\sin z,\;
-y\cos z+\sin x
-\right).
 }
-\]
+$$
 
 Whenever
 
-\[
+$$
 \nabla g\neq0,
-\]
+$$
 
-the implicit function theorem tells us that
+the implicit function theorem guarantees that $g=0$ locally defines a smooth two-dimensional manifold.
 
-\[
-g(x,y,z)=0
-\]
+Its unit normal is
 
-locally defines a smooth two-dimensional manifold.
-
-Its normal direction is
-
-\[
+$$
 \boxed{
-n_g
-=
+ n_g=
 \frac{\nabla g}{\|\nabla g\|}.
 }
-\]
+$$
 
-The shader itself does not explicitly compute this analytic normal, but the mathematical surface is fully characterized by this gradient.
-
----
-
-# 9. Radial Geometry
-
-The scalar
-
-\[
-s=\|x\|
-\]
-
-also defines concentric spheres
-
-\[
-s=R.
-\]
-
-In particular,
-
-\[
-s=5
-\]
-
-and
-
-\[
-s=6
-\]
-
-appear explicitly in the distance estimator.
-
-Thus the shader combines two distinct geometric families:
-
-\[
-\text{periodic implicit surface}
-\]
-
-and
-
-\[
-\text{spherical shells}.
-\]
-
-This is the key geometric recipe.
+The shader does not calculate this analytic normal, but this gradient is the underlying differential-geometric object controlling the local orientation of the implicit surface.
 
 ---
 
-# 10. Reconstructing the Distance Estimator
+## 9. The Two Competing Geometric Fields
 
-The exact code is
-
-\[
-d
-=
-0.2
-\min
-\left(
-0.2|g(x)|
-+
-\max(s-5,0.1),
-\;
-|s-6|+0.2
-\right).
-\]
-
-Therefore define
-
-\[
-A(x,s)
-=
-0.2|g(x)|
-+
-\max(s-5,0.1),
-\]
-
-and
-
-\[
-B(s)
-=
-|s-6|+0.2.
-\]
-
-Then
-
-\[
-\boxed{
-D(x)
-=
-0.2\min(A(x,s),B(s)).
-}
-\]
-
-Explicitly,
-
-\[
-\boxed{
-D(x)
-=
-0.2
-\min
-\left[
-0.2
-\left|
-x\sin y+y\sin z+z\sin x
-\right|
-+
-\max(\|x\|-5,0.1),
-\;
-|\|x\|-6|+0.2
-\right].
-}
-\]
-
-This is the scalar field used as the ray-marching step.
-
----
-
-# 11. What the First Branch Means
-
-The first branch is
-
-\[
-A(x,s)
-=
-0.2|g(x)|
-+
-\max(s-5,0.1).
-\]
-
-The factor
-
-\[
-|g(x)|
-\]
-
-measures how close we are to the implicit trigonometric surface
-
-\[
-g(x)=0.
-\]
-
-But it is not itself the Euclidean distance to that surface.
-
-The first-order approximation to the distance from a point \(x\) to
-
-\[
-g(x)=0
-\]
-
-is approximately
-
-\[
-\boxed{
-d_{\mathrm{local}}
-\approx
-\frac{|g(x)|}{\|\nabla g(x)\|}.
-}
-\]
-
-The shader does not perform this normalization.
-
-Instead it uses
-
-\[
-0.2|g(x)|.
-\]
-
-Thus this is better described as a **procedural distance heuristic** or **distance estimator**, not a mathematically exact signed-distance function.
-
-Then
-
-\[
-\max(s-5,0.1)
-\]
-
-creates a radial bias.
-
-For
-
-\[
-s>5,
-\]
-
-the term becomes
-
-\[
-s-5.
-\]
-
-For
-
-\[
-s\le5,
-\]
-
-it is clamped to
-
-\[
-0.1.
-\]
-
-Thus the first branch roughly says
-
-\[
-\boxed{
-A
-=
-\text{periodic surface measure}
-+
-\text{outward radial penalty}.
-}
-\]
-
----
-
-# 12. What the Second Branch Means
-
-The second branch is
-
-\[
-B(s)=|s-6|+0.2.
-\]
-
-The zero set of
-
-\[
-|s-6|
-\]
-
-is
-
-\[
-s=6.
-\]
-
-Therefore this is a spherical shell centered at the origin with radius
-
-\[
-R=6.
-\]
-
-The constant
-
-\[
-0.2
-\]
-
-offsets the shell away from zero.
-
-Thus
-
-\[
-\boxed{
-B(s)
-=
-\text{distance-like measure to the sphere }s=6
-+
-0.2.
-}
-\]
-
-The shader is therefore constructing a competition between
-
-\[
-\text{periodic surface}
-\]
-
-and
-
-\[
-\text{spherical shell}.
-\]
-
----
-
-# 13. The Minimum as a Geometric Union Operator
-
-The use of
-
-\[
-\min(A,B)
-\]
-
-is geometrically meaningful.
-
-Suppose two implicit fields approximate distance to two structures:
-
-\[
-d_1(x),
-\qquad
-d_2(x).
-\]
-
-Then
-
-\[
-d(x)=\min(d_1(x),d_2(x))
-\]
-
-selects whichever structure is closer.
-
-This behaves like the distance field of a union:
-
-\[
-\boxed{
-d_{A\cup B}(x)
-\approx
-\min(d_A(x),d_B(x)).
-}
-\]
-
-Hence the shader is effectively forming a procedural union between two geometric constructions.
-
-The complete field is therefore
-
-\[
-\boxed{
-D(x)
-=
-0.2
-\min
-\left[
-0.2|g(x)|+\max(\|x\|-5,0.1),
-\;
-|\|x\|-6|+0.2
-\right].
-}
-\]
-
-The visual result is generated by whichever geometric mechanism provides the smaller local value.
-
----
-
-# 14. Why `abs` Appears Everywhere
-
-The absolute value
-
-\[
-|g(x)|
-\]
-
-turns the signed implicit function into an unsigned proximity measure.
-
-Without absolute value,
-
-\[
-g(x)
-\]
-
-changes sign across the surface.
-
-With absolute value,
-
-\[
-|g(x)|\ge0.
-\]
-
-Both sides of the surface become equivalent:
-
-\[
-g>0
-\quad\text{and}\quad
-g<0
-\]
-
-both correspond to increasing distance from the zero set.
-
-Likewise,
-
-\[
-|s-6|
-\]
-
-creates two sides around the radius
-
-\[
-s=6.
-\]
-
-Thus the shader deliberately prefers unsigned geometric proximity.
-
----
-
-# 15. The Complete Ray-Marching Recurrence
-
-Let
-
-\[
-q_n
-=
-z_n\hat{\omega}+9e_z.
-\]
+The distance estimator contains two branches.
 
 Define
 
-\[
-s_n=\|q_n\|.
-\]
-
-Define
-
-\[
-c_n
+$$
+F_1(x)
 =
-\cos
-\left[
-\begin{pmatrix}
-0\\2\\4
-\end{pmatrix}
--\frac t2\mathbf1
-+0.3s_n\mathbf1
-\right].
-\]
-
-Define
-
-\[
-a_n
-=
-\frac{c_n}{\|c_n\|}.
-\]
-
-Then rotate:
-
-\[
-\boxed{
-x_n
-=
-(a_n\cdot q_n)a_n
--
-a_n\times q_n.
-}
-\]
-
-Because this is a \(-\pi/2\) rotation,
-
-\[
-\|x_n\|=\|q_n\|=s_n.
-\]
-
-Now define
-
-\[
-g_n
-=
-x_{n,x}\sin x_{n,y}
-+
-x_{n,y}\sin x_{n,z}
-+
-x_{n,z}\sin x_{n,x}.
-\]
-
-Then
-
-\[
-A_n
-=
-0.2|g_n|
-+
-\max(s_n-5,0.1),
-\]
-
-and
-
-\[
-B_n
-=
-|s_n-6|+0.2.
-\]
-
-The marching distance is
-
-\[
-\boxed{
-d_n
-=
-0.2\min(A_n,B_n).
-}
-\]
-
-Finally,
-
-\[
-\boxed{
-z_{n+1}=z_n+d_n.
-}
-\]
-
-This is the mathematical core of the shader.
-
----
-
-# 16. The Loop Termination Condition
-
-The shader tests
-
-\[
-z+i++<200.
-\]
-
-Under the intended initialization
-
-\[
-i_0=0,
-\]
-
-the \(n\)-th iteration is allowed while
-
-\[
-\boxed{
-z_n+n<200.
-}
-\]
-
-This is unusual compared with the more common condition
-
-\[
-n<N_{\max}.
-\]
-
-Here both accumulated ray depth and iteration count consume the budget.
-
-The consequence is that the effective maximum iteration count is not simply \(200\).
-
-It depends on how far the ray has marched.
-
-Roughly,
-
-\[
-n+z_n<200.
-\]
-
-Thus:
-
-\[
-\text{slow marching}
-\Rightarrow
-\text{more iterations},
-\]
-
-while
-
-\[
-\text{large steps}
-\Rightarrow
-\text{earlier termination}.
-\]
-
-The shader is effectively imposing a joint computational/depth budget.
-
----
-
-# 17. Radiance Accumulation
-
-The output accumulation is
-
-\[
-o
-\leftarrow
-o+
-\frac{
-\max
-\left(
-\cos(0.4x+\phi_c),
-\frac{5}{s^2}
-\right)
-}
-{d^2},
-\]
+0.2|g(x)|+\max(s-5,0.1),
+$$
 
 where
 
-\[
-\phi_c=(0,2,4,0).
-\]
+$$
+s=\|x\|,
+$$
 
-For the RGB channels,
+and define
 
-\[
-\phi_{\mathrm{RGB}}
-=
-\begin{pmatrix}
-0\\2\\4
-\end{pmatrix}.
-\]
+$$
+F_2(x)=|s-6|+0.2.
+$$
 
-Therefore
+The final scalar field is
 
-\[
-h(s,x)
-=
-\max
-\left[
-\begin{pmatrix}
-\cos(0.4x)\\
-\cos(0.4x+2)\\
-\cos(0.4x+4)
-\end{pmatrix},
-\;
-\frac5{s^2}
-\begin{pmatrix}
-1\\1\\1
-\end{pmatrix}
-\right].
-\]
-
-The accumulated color after \(N\) iterations is
-
-\[
+$$
 \boxed{
-O_N
+D(x)
 =
-\sum_{n=0}^{N-1}
-\frac{
-h(x_n,s_n)
-}{
-d_n^2
-}.
+0.2\min\left(F_1(x),F_2(x)\right).
 }
-\]
+$$
 
-Thus the shader deliberately emphasizes points with small marching distance.
+Explicitly,
 
----
-
-# 18. Why the \(1/d^2\) Term Creates Glow
-
-The weighting
-
-\[
-\frac1{d^2}
-\]
-
-is singular as
-
-\[
-d\to0.
-\]
-
-Specifically,
-
-\[
-\lim_{d\to0^+}\frac1{d^2}
-=
-+\infty.
-\]
-
-Therefore samples close to the procedural surface receive enormous radiance.
-
-This is analogous to a singular kernel.
-
-The shader is effectively constructing something resembling
-
-\[
+$$
 \boxed{
-I(x)
-=
-\int
-\frac{F(x(s))}
-{D(x(s))^2}
-\,ds
-}
-\]
-
-but approximating the integral through the discrete marching sequence.
-
-This is **not physically based volume rendering**.
-
-It is a procedural glow model built from a singular proximity kernel.
-
-The basic visual principle is simply
-
-\[
-\boxed{
-\text{closer to geometry}
-\quad\Longrightarrow\quad
-\text{stronger emission}.
-}
-\]
-
----
-
-# 19. Continuous Interpretation
-
-Ignoring the discretization for a moment, consider the ray
-
-\[
-q(z)=z\hat{\omega}+9e_z.
-\]
-
-Define the warped point
-
-\[
-x(z,t)
-=
-R_{a(\|q(z)\|,t)}
-\left(-\frac{\pi}{2}\right)
-q(z).
-\]
-
-Then the scalar field is
-
-\[
-D(z,t)
+D(x)
 =
 0.2
 \min
 \left[
-0.2|g(x(z,t))|
+0.2\left|x\sin y+y\sin z+z\sin x\right|
++\max(\|x\|-5,0.1),
+|\|x\|-6|+0.2
+\right].
+}
+$$
+
+The two branches represent different geometric mechanisms.
+
+---
+
+## 10. Interpretation of the First Branch
+
+The first branch is
+
+$$
+F_1(x)
+=
+0.2|g(x)|+\max(s-5,0.1).
+$$
+
+The term
+
+$$
+|g(x)|
+$$
+
+measures algebraic proximity to the zero set
+
+$$
+g(x)=0.
+$$
+
+It is not, in general, the exact Euclidean distance to that surface.
+
+A first-order approximation to the distance from $x$ to an implicit surface is
+
+$$
+\boxed{
+\operatorname{dist}(x,g=0)
+\approx
+\frac{|g(x)|}{\|\nabla g(x)\|}.
+}
+$$
+
+The shader omits the denominator and instead uses the heuristic scaling factor $0.2$.
+
+The radial term is
+
+$$
+\max(s-5,0.1).
+$$
+
+For $s>5$ this becomes
+
+$$
+s-5,
+$$
+
+while for $s\le5$ it is clamped to $0.1$.
+
+Therefore the first branch is approximately
+
+$$
+\boxed{
+\text{periodic surface proximity}
 +
-\max(\|q(z)\|-5,0.1),
-\;
-|\|q(z)\|-6|+0.2
-\right].
-\]
-
-The corresponding continuous brightness model can be interpreted as
-
-\[
-\boxed{
-C(\hat{\omega},t)
-\approx
-\int
-\frac{
-H(x(z,t),\|q(z)\|)
-}{
-D(z,t)^2
+\text{radial envelope}.
 }
-\,dz
-}
-\]
-
-for
-
-\[
-H(x,s)
-=
-\max
-\left[
-\cos(0.4x_x+\phi_{\mathrm{RGB}}),
-\frac5{s^2}
-\right].
-\]
-
-The shader approximates this integral with samples
-
-\[
-z_0,z_1,z_2,\ldots
-\]
-
-whose spacing is itself determined by
-
-\[
-D.
-\]
-
-That makes the algorithm nonlinear in two ways:
-
-\[
-\boxed{
-\text{geometry controls sampling}
-}
-\]
-
-and
-
-\[
-\boxed{
-\text{sampling controls accumulated intensity}.
-}
-\]
-
-That feedback is the core of the visual style.
+$$
 
 ---
 
-# 20. Why This Is Ray Marching Rather Than Ordinary Ray Tracing
+## 11. Interpretation of the Second Branch
 
-Classical ray tracing solves for intersections of the form
+The second branch is
 
-\[
-F(q(z))=0.
-\]
+$$
+F_2(x)=|s-6|+0.2.
+$$
 
-That often requires solving a geometric equation.
+The zero set of $|s-6|$ is
 
-Ray marching instead repeatedly evaluates a distance estimate:
+$$
+s=6,
+$$
 
-\[
-z_{n+1}
+which is the sphere of radius $6$ centered at the origin.
+
+Thus
+
+$$
+\boxed{
+F_2
 =
-z_n+D(q_n).
-\]
-
-The crucial heuristic is
-
-\[
-\boxed{
-D(q_n)
-\approx
-\text{safe distance that can be traveled without crossing geometry}.
+\text{distance-like measure to a spherical shell}
++0.2.
 }
-\]
+$$
 
-If \(D\) is a conservative signed-distance estimate, sphere tracing can converge rapidly while avoiding many intersection calculations.
-
-Here the field is not an exact SDF, so the procedure is better described as
-
-\[
-\boxed{
-\text{heuristic sphere tracing / procedural ray marching}.
-}
-\]
-
-This distinction matters.
-
-The shader gets its visual result partly because the numerical system is forgiving, not because every quantity has a rigorous geometric-distance interpretation.
-
-Humans occasionally call anything involving a distance-like number an SDF. Mathematics would like them to stop.
+The minimum operator allows this shell and the trigonometric structure to compete for control of the final field.
 
 ---
 
-# 21. SDF Conditions and Lipschitz Continuity
+## 12. The Minimum as a Union Operator
 
-For a mathematically robust sphere tracer, suppose
+Suppose two fields $D_A$ and $D_B$ approximate distances to two shapes. Then a standard constructive-union operation is
 
-\[
-D(x)
-\]
-
-is a distance estimate satisfying a Lipschitz condition
-
-\[
-|D(x)-D(y)|
-\le
-L\|x-y\|.
-\]
-
-If
-
-\[
-L\le1,
-\]
-
-then a step of size
-
-\[
-D(x)
-\]
-
-is geometrically meaningful as a lower bound on the distance to the surface.
-
-For a true signed distance function,
-
-\[
-\boxed{
-\|\nabla D\|=1
-}
-\]
-
-almost everywhere.
-
-The field in this shader does not generally satisfy this.
-
-For example,
-
-\[
-g(x)=x\sin y+y\sin z+z\sin x
-\]
-
-has gradient
-
-\[
-\nabla g
-=
-\left(
-\sin y+z\cos x,
-x\cos y+\sin z,
-y\cos z+\sin x
-\right).
-\]
-
-Its magnitude may be significantly larger than \(1\).
+$$
+D_{A\cup B}(x)
+\approx
+\min(D_A(x),D_B(x)).
+$$
 
 Therefore
 
-\[
-|g(x)|
-\]
-
-can change much faster than Euclidean distance.
-
-Multiplying by
-
-\[
-0.2
-\]
-
-acts partly as a conservative scaling factor, reducing the aggressiveness of the field.
-
-This is a common procedural-shader strategy:
-
-\[
+$$
 \boxed{
-\text{scale a complicated field down}
-\Rightarrow
-\text{make the resulting marcher more stable}.
+D(x)=0.2\min(F_1(x),F_2(x))
 }
-\]
+$$
 
-It is not a proof of safety, merely a useful heuristic.
+can be interpreted as a procedural union or lower envelope.
 
----
+More explicitly,
 
-# 22. The Gradient of the First Distance Branch
-
-Let
-
-\[
-A(x)
-=
-0.2|g(x)|+\max(s-5,0.1),
-\]
-
-with
-
-\[
-s=\|x\|.
-\]
-
-Away from the nondifferentiable sets
-
-\[
-g(x)=0
-\]
-
-and
-
-\[
-s=5,
-\]
-
-we have
-
-\[
-\nabla |g|
-=
-\operatorname{sign}(g)\nabla g.
-\]
-
-Also,
-
-\[
-\nabla s
-=
-\frac{x}{\|x\|}
-=
-\frac{x}{s}.
-\]
-
-Therefore, when
-
-\[
-s>5,
-\]
-
-the gradient is
-
-\[
-\boxed{
-\nabla A
-=
-0.2\operatorname{sign}(g)\nabla g
-+
-\frac{x}{s}.
-}
-\]
-
-When
-
-\[
-s<5,
-\]
-
-the radial contribution disappears because the clamp is constant:
-
-\[
-\boxed{
-\nabla A
-=
-0.2\operatorname{sign}(g)\nabla g.
-}
-\]
-
-Then
-
-\[
-D=0.2\min(A,B)
-\]
-
-is piecewise defined according to whichever branch is smaller.
-
----
-
-# 23. The Geometry as a Lower Envelope
-
-Define
-
-\[
-F_1(x)=
-0.2|g(x)|+\max(\|x\|-5,0.1)
-\]
-
-and
-
-\[
-F_2(x)=
-|\|x\|-6|+0.2.
-\]
-
-Then
-
-\[
-D(x)
-=
-0.2\min(F_1(x),F_2(x)).
-\]
-
-The surface
-
-\[
-F_1=F_2
-\]
-
-is therefore a switching manifold.
-
-On one side,
-
-\[
-D=0.2F_1,
-\]
-
-while on the other,
-
-\[
-D=0.2F_2.
-\]
-
-Thus the complete field is a piecewise-defined lower envelope:
-
-\[
-\boxed{
+$$
 D(x)=
 \begin{cases}
-0.2F_1(x),&F_1(x)\le F_2(x),\\[4pt]
-0.2F_2(x),&F_2(x)<F_1(x).
+0.2F_1(x), & F_1(x)\le F_2(x),\\
+0.2F_2(x), & F_2(x)<F_1(x).
 \end{cases}
-}
-\]
+$$
 
-This explains why the geometry can exhibit abrupt changes in local marching behavior.
+The switching surface satisfies
+
+$$
+F_1(x)=F_2(x).
+$$
+
+That surface is where the two geometric descriptions exchange control.
 
 ---
 
-# 24. A Cleaner Mathematical Pseudocode
+## 13. Reconstructed Ray-Marching Recurrence
 
-The entire shader can be rewritten conceptually as
+Let the intended initial state be
 
-\[
-\boxed{
-\begin{aligned}
-z_0 &= 0,\\
-s_0 &= 0,\\
-O_0 &= 0.
-\end{aligned}
-}
-\]
+$$
+ z_0=0,
+\qquad
+ s_0=0,
+\qquad
+ i_0=0.
+$$
 
-For
+At iteration $n$,
 
-\[
-n=0,1,2,\ldots
-\]
-
-while
-
-\[
-z_n+n<200:
-\]
-
-\[
+$$
 q_n=z_n\hat{\omega}+9e_z,
-\]
+$$
 
-\[
+$$
 s_n=\|q_n\|,
-\]
+$$
 
-\[
+$$
 a_n=
 \frac{
 \cos\left(
-(0,2,4)^T-\frac t2\mathbf1+0.3s_n\mathbf1
+\begin{pmatrix}
+0\\2\\4
+\end{pmatrix}
+-\frac t2\mathbf{1}
++0.3s_n\mathbf{1}
 \right)
 }{
 \left\|
 \cos\left(
-(0,2,4)^T-\frac t2\mathbf1+0.3s_n\mathbf1
-\right)
-\right\|
-},
-\]
-
-\[
-x_n
-=
-(a_n\cdot q_n)a_n-a_n\times q_n,
-\]
-
-\[
-g_n
-=
-x_{n,x}\sin x_{n,y}
-+
-x_{n,y}\sin x_{n,z}
-+
-x_{n,z}\sin x_{n,x},
-\]
-
-\[
-A_n
-=
-0.2|g_n|
-+
-\max(s_n-5,0.1),
-\]
-
-\[
-B_n
-=
-|s_n-6|+0.2,
-\]
-
-\[
-d_n
-=
-0.2\min(A_n,B_n),
-\]
-
-\[
-O_{n+1}
-=
-O_n
-+
-\frac{
-\max
-\left(
-\cos(0.4x_{n,x}+(0,2,4,0)),
-\frac5{s_n^2}
-\right)
-}{
-d_n^2
-},
-\]
-
-\[
-z_{n+1}=z_n+d_n.
-\]
-
-Finally,
-
-\[
-\boxed{
-C
-=
-\tanh\left(\frac{O_N}{30000}\right).
-}
-\]
-
-That is the mathematical program.
-
----
-
-# 25. The Final Closed Form
-
-Collect everything into a single formulation.
-
-Let
-
-\[
-\hat{\omega}
-=
-\frac{2FC-r_{xyy}}
-{\|2FC-r_{xyy}\|}.
-\]
-
-For each ray sample \(z_n\), define
-
-\[
-q_n
-=
-z_n\hat{\omega}+9e_z.
-\]
-
-Define
-
-\[
-s_n
-=
-\|q_n\|
-=
-\sqrt{
-z_n^2+18z_n\hat{\omega}_z+81
-}.
-\]
-
-Define
-
-\[
-u_n
-=
-\cos
-\left[
 \begin{pmatrix}
 0\\2\\4
 \end{pmatrix}
--\frac t2
-\begin{pmatrix}
-1\\1\\1
-\end{pmatrix}
-+
-0.3s_n
-\begin{pmatrix}
-1\\1\\1
-\end{pmatrix}
-\right].
-\]
+-\frac t2\mathbf{1}
++0.3s_n\mathbf{1}
+\right)
+\right\|
+},
+$$
 
-Then
+and
 
-\[
-a_n=\frac{u_n}{\|u_n\|}.
-\]
-
-Define the radial rotation
-
-\[
-x_n
+$$
+ x_n
 =
 (a_n\cdot q_n)a_n-a_n\times q_n.
-\]
-
-Define the cyclic trigonometric implicit function
-
-\[
-g(x,y,z)
-=
-x\sin y+y\sin z+z\sin x.
-\]
+$$
 
 Then
 
-\[
-D_n
+$$
+ g_n
 =
-0.2
-\min
-\left[
-0.2|g(x_n)|
-+
-\max(s_n-5,0.1),
-\;
-|s_n-6|+0.2
-\right].
-\]
+ x_{n,x}\sin x_{n,y}
++x_{n,y}\sin x_{n,z}
++x_{n,z}\sin x_{n,x}.
+$$
 
-The ray recurrence is
+Define
 
-\[
+$$
+ A_n
+=
+0.2|g_n|+\max(s_n-5,0.1),
+$$
+
+and
+
+$$
+ B_n
+=|s_n-6|+0.2.
+$$
+
+The marching distance is
+
+$$
 \boxed{
-z_{n+1}=z_n+D_n.
+ d_n=0.2\min(A_n,B_n).
 }
-\]
+$$
 
-The color accumulation is
+The ray parameter is then advanced by
 
-\[
+$$
+\boxed{
+ z_{n+1}=z_n+d_n.
+}
+$$
+
+This is the central numerical recurrence.
+
+---
+
+## 14. Why This Is Ray Marching
+
+The classical ray equation is
+
+$$
+q(z)=q_0+z\hat{\omega}.
+$$
+
+An ordinary ray tracer may seek an exact solution of
+
+$$
+F(q(z))=0.
+$$
+
+Ray marching instead repeatedly evaluates a distance-like field and advances along the ray:
+
+$$
+\boxed{
+z_{n+1}=z_n+D(q_n).
+}
+$$
+
+The fundamental assumption of sphere tracing is that $D$ is sufficiently conservative that a step of size $D$ does not cross the surface.
+
+For a true signed distance field,
+
+$$
+\|\nabla D\|=1
+$$
+
+almost everywhere.
+
+The field here is not an exact SDF. It is better viewed as a heuristic procedural distance estimator.
+
+---
+
+## 15. Lipschitz Perspective
+
+A function $D$ is Lipschitz with constant $L$ if
+
+$$
+|D(x)-D(y)|
+\le
+L\|x-y\|.
+$$
+
+When a distance field is sufficiently well behaved, the Lipschitz constant controls how quickly the field can change in space.
+
+For a true Euclidean signed distance field, one has the important property
+
+$$
+\|\nabla D\|=1
+$$
+
+almost everywhere, corresponding to a local Lipschitz constant of $1$.
+
+For
+
+$$
+g=x\sin y+y\sin z+z\sin x,
+$$
+
+the gradient magnitude is not bounded by $1$ in any useful global sense.
+
+Consequently
+
+$$
+|g(x)|
+$$
+
+is not itself a safe Euclidean distance.
+
+The shader's factors such as $0.2$ can be interpreted as empirical contraction factors that make the ray marcher less aggressive.
+
+They are useful heuristics, not proofs of geometric safety.
+
+---
+
+## 16. The Iteration Budget
+
+The loop condition is approximately
+
+$$
+z+i<200.
+$$
+
+With $i_n=n$, the recurrence is therefore terminated while
+
+$$
+\boxed{
+z_n+n<200.
+}
+$$
+
+This is different from a fixed iteration count
+
+$$
+n<N_{\max}.
+$$
+
+Here both marching depth and iteration count consume the same budget.
+
+Large steps increase $z_n$ rapidly and therefore shorten the number of remaining iterations.
+
+Small steps allow more iterations.
+
+Thus the computational budget is coupled to geometric complexity.
+
+---
+
+## 17. Radiance Accumulation
+
+The color contribution is approximately
+
+$$
+\frac{
+\max\left(\cos(0.4x_x+\phi),5/s^2\right)
+}{d^2},
+$$
+
+where the RGB phase vector is
+
+$$
+\phi=(0,2,4).
+$$
+
+Define the RGB numerator
+
+$$
+H(x,s)
+=
+\max\left[
+\begin{pmatrix}
+\cos(0.4x_x)\\
+\cos(0.4x_x+2)\\
+\cos(0.4x_x+4)
+\end{pmatrix},
+\frac5{s^2}
+\begin{pmatrix}
+1\\1\\1
+\end{pmatrix}
+\right],
+$$
+
+where the maximum is taken componentwise.
+
+The accumulated color after $N$ steps is therefore
+
+$$
 \boxed{
 O_N
 =
 \sum_{n=0}^{N-1}
-\frac{
-\max
-\left[
-\cos(0.4x_{n,x}+\phi),
-\frac5{s_n^2}
-\right]
-}{
-D_n^2
-},
+\frac{H(x_n,s_n)}{d_n^2}.
 }
-\]
+$$
 
-with
+The $1/d_n^2$ term strongly emphasizes samples close to the procedural geometry.
 
-\[
-\phi=(0,2,4,0).
-\]
+---
 
-The final image value is
+## 18. Singular Kernel Interpretation
 
-\[
+The glow kernel is
+
+$$
+K(d)=\frac1{d^2}.
+$$
+
+As $d\to0^+$,
+
+$$
+\lim_{d\to0^+}\frac1{d^2}=+\infty.
+$$
+
+Thus the shader intentionally uses a singular proximity response.
+
+A continuous analogue is
+
+$$
 \boxed{
 C
-=
-\tanh\left(\frac{1}{30000}
-\sum_{n=0}^{N-1}
+\sim
+\int
+\frac{H(x(z))}{D(x(z))^2}\,dz.
+}
+$$
+
+The shader approximates such an integral using an adaptive sequence of samples.
+
+Importantly, this is not a physically based volume-rendering equation. It is a procedural glow model in which proximity to the field is converted into high intensity.
+
+---
+
+## 19. Continuous Interpretation
+
+Let
+
+$$
+q(z)=z\hat{\omega}+9e_z.
+$$
+
+Define
+
+$$
+s(z)=\|q(z)\|,
+$$
+
+and
+
+$$
+a(z,t)=
 \frac{
-\max
-\left[
-\cos(0.4x_{n,x}+\phi),
-\frac5{s_n^2}
-\right]
+\cos((0,2,4)^T-\tfrac t2\mathbf{1}+0.3s(z)\mathbf{1})
 }{
-D_n^2
-}
-\right).
-}
-\]
+\left\|
+\cos((0,2,4)^T-\tfrac t2\mathbf{1}+0.3s(z)\mathbf{1})
+\right\|
+}.
+$$
 
-The sequence is terminated by
+Then
 
-\[
+$$
+x(z,t)
+=
+R_{a(z,t)}\left(-\frac\pi2\right)q(z).
+$$
+
+Define
+
+$$
+D(z,t)
+=
+0.2\min\left[
+0.2|g(x(z,t))|+\max(s(z)-5,0.1),
+|s(z)-6|+0.2
+\right].
+$$
+
+The continuous rendering model is then conceptually
+
+$$
 \boxed{
-z_n+n\ge200.
+C(\hat\omega,t)
+\approx
+T
+\left[
+\int
+\frac{H(x(z,t),s(z))}{D(z,t)^2}\,dz
+\right].
 }
-\]
+$$
 
-This is the final mathematical object implemented by the shader.
+The actual shader uses a discrete and adaptive approximation of this integral.
 
 ---
 
-# 26. What the Shader Is Really Doing
+## 20. Why the Domain Warp Creates Complexity
 
-At a conceptual level, the shader can be decomposed as
+Without the warp, the base surface is simply
 
-\[
+$$
+ g(q)=0.
+$$
+
+With the warp, the visible surface is defined by
+
+$$
 \boxed{
-\text{camera ray}
-\rightarrow
-\text{radial state}
-\rightarrow
-\text{state-dependent rotation}
-\rightarrow
-\text{periodic implicit field}
-\rightarrow
-\text{radial shell competition}
-\rightarrow
-\text{adaptive stepping}
-\rightarrow
-\text{singular glow}
-\rightarrow
-\text{tone mapping}.
+G(q,t)=g(W(q,t))=0,
 }
-\]
+$$
 
-The interesting part is that the field is not generated by a single primitive.
+where
 
-Instead,
+$$
+W(q,t)=R_{a(\|q\|,t)}\left(-\frac\pi2\right)q.
+$$
 
-\[
+A composition of nonlinear maps can create complicated geometry even when each map is individually simple.
+
+This is one of the most important principles in procedural graphics:
+
+$$
 \boxed{
-\text{geometry}
-=
-\text{warp}
-\circ
-\text{periodic field}
-\circ
-\text{radial envelope}.
-}
-\]
-
-And the apparent complexity emerges from composing relatively simple operators.
-
-That is one of the central ideas of procedural graphics.
-
----
-
-# 27. Why the Geometry Looks More Complicated Than the Equations
-
-Consider the composition
-
-\[
-x=R_{a(s,t)}q.
-\]
-
-Suppose the original field were simply
-
-\[
-g(x)=0.
-\]
-
-Without the warp, it is a fixed periodic surface.
-
-But now
-
-\[
-x=x(q,t),
-\]
-
-so the actual surface in ray-space is defined implicitly by
-
-\[
-g(x(q,t))=0.
-\]
-
-Therefore the rendered surface is
-
-\[
-\boxed{
-G(q,t)
-=
-g\left(
-R_{a(\|q\|,t)}
-\left(-\frac{\pi}{2}\right)
-q
-\right)
-=0.
-}
-\]
-
-This is a composition of nonlinear maps.
-
-Even when each individual map is simple, the composition can produce highly elaborate geometry.
-
-The general procedural principle is
-
-\[
-\boxed{
-\text{simple field}
+\text{simple implicit field}
 +
 \text{nonlinear coordinate transformation}
 =
 \text{complex apparent geometry}.
 }
-\]
+$$
 
 ---
 
-# 28. A More General Mathematical Framework
+## 21. Chain Rule for a Warped Implicit Field
 
-The shader belongs to a broad family of constructions of the form
+Suppose
 
-\[
+$$
+F(q,t)=F_0(W(q,t)).
+$$
+
+Then by the multivariable chain rule,
+
+$$
 \boxed{
-F(x,t)
+\nabla F(q,t)
 =
-F_0\!\left(W(x,t)\right),
+J_W(q,t)^T\nabla F_0(W(q,t)),
 }
-\]
+$$
 
 where
 
-\[
-F_0
-\]
+$$
+J_W
+=\frac{\partial W}{\partial q}
+$$
 
-is a base implicit field and
+is the Jacobian of the warp.
 
-\[
-W
-\]
+For this shader,
 
-is a coordinate warp.
+$$
+F_0(x)=x\sin y+y\sin z+z\sin x.
+$$
 
-Here,
+The warp is
 
-\[
-F_0(x)
-=
-x\sin y+y\sin z+z\sin x,
-\]
+$$
+W(q,t)=R_{a(\|q\|,t)}\left(-\frac\pi2\right)q.
+$$
 
-and
+The rotation matrix itself is perfectly conditioned, but the full Jacobian contains derivatives of the axis $a(\|q\|,t)$.
 
-\[
-W(x,t)
-=
-R_{a(\|x\|,t)}
-\left(-\frac{\pi}{2}\right)x.
-\]
-
-This is an extremely powerful abstraction.
-
-You do not need to invent increasingly ridiculous equations.
-
-Instead:
-
-\[
-\boxed{
-\text{invent a simple field}
-}
-\]
-
-then
-
-\[
-\boxed{
-\text{invent an interesting domain transformation}.
-}
-\]
-
-The visual complexity comes from composition.
+That is where the real nonlinearity enters.
 
 ---
 
-# 29. Generalization I: Arbitrary Rotation Angle
+## 22. Derivative of the Normalized Axis
 
-The fixed angle
+Let
 
-\[
--\frac{\pi}{2}
-\]
+$$
+a=\frac{c}{\|c\|}.
+$$
 
-can be generalized to
+For any scalar parameter $u$,
 
-\[
-\theta=\theta(s,t).
-\]
-
-Rodrigues' formula gives
-
-\[
+$$
 \boxed{
-W(q,s,t)
+\frac{\partial a}{\partial u}
 =
-q\cos\theta
-+
-(a\times q)\sin\theta
-+
-a(a\cdot q)(1-\cos\theta).
+\frac1{\|c\|}
+(I-aa^T)
+\frac{\partial c}{\partial u}.
 }
-\]
+$$
 
-For example,
+Here
 
-\[
-\theta(s,t)
-=
-\theta_0+\alpha s+\beta t.
-\]
-
-Then
-
-\[
-W
-\]
-
-becomes a continuous helical twist.
-
-The original shader is simply the special case
-
-\[
-\boxed{
-\theta=-\frac{\pi}{2}.
-}
-\]
-
----
-
-# 30. Generalization II: Radially Varying Rotation
-
-Rather than only varying the axis,
-
-\[
-a=a(s,t),
-\]
-
-we can vary both axis and angle:
-
-\[
-\boxed{
-W(q)
-=
-R_{a(s,t)}(\theta(s,t))q.
-}
-\]
-
-For example,
-
-\[
-a(s,t)
-=
-\operatorname{normalize}
-\left(
-\begin{pmatrix}
-\cos(\alpha s+t)\\
-\cos(\beta s+t+\phi_1)\\
-\cos(\gamma s+t+\phi_2)
-\end{pmatrix}
-\right),
-\]
-
-and
-
-\[
-\theta(s,t)
-=
-\theta_0+\lambda\sin(\mu s+\nu t).
-\]
-
-This produces a generalized rotational domain warp.
-
----
-
-# 31. Generalization III: Fourier Orientation Fields
-
-The cosine vector can be generalized from one harmonic to a Fourier series:
-
-\[
-a(s,t)
-=
-\operatorname{normalize}
-\left(
-\sum_{k=1}^{K}
-A_k
-\cos(\omega_k s+\nu_k t+\phi_k)
-\right).
-\]
-
-More explicitly,
-
-\[
-\boxed{
-a(s,t)
-=
-\operatorname{normalize}
-\left(
-\sum_{k=1}^{K}
-A_k
-\cos(\omega_k s+\nu_k t+\phi_k)
-\right).
-}
-\]
-
-The original shader effectively uses a single harmonic:
-
-\[
-K=1.
-\]
-
-Increasing \(K\) gives controlled multiscale deformation without abandoning the mathematical structure.
-
----
-
-# 32. Generalization IV: Replace the Base Field
-
-The current implicit field is
-
-\[
-g(x,y,z)
-=
-x\sin y+y\sin z+z\sin x.
-\]
-
-We could replace it with
-
-\[
-g(x,y,z)
-=
-\sin(xy)+\sin(yz)+\sin(zx).
-\]
-
-Or
-
-\[
-g(x,y,z)
-=
-\sin(x)+\sin(y)+\sin(z)-\lambda.
-\]
-
-Or
-
-\[
-g(x,y,z)
-=
-\sin(\alpha x+\beta y)
-+
-\sin(\gamma y+\delta z)
-+
-\sin(\epsilon z+\zeta x).
-\]
-
-Or a radial-angular composition:
-
-\[
-g(x)
-=
-f(\|x\|,\theta,\phi).
-\]
-
-The warp remains unchanged.
-
-This separation is extremely useful:
-
-\[
-\boxed{
-\text{shape generator}
-\neq
-\text{domain warp}.
-}
-\]
-
-You can develop each independently.
-
----
-
-# 33. Generalization V: Smooth Union Instead of Hard Minimum
-
-The current union is
-
-\[
-D=\min(D_1,D_2).
-\]
-
-A smooth minimum can be defined as
-
-\[
-\operatorname{smin}_k(a,b)
-=
--\frac1k
-\log
-\left(
-e^{-ka}+e^{-kb}
-\right).
-\]
-
-Therefore,
-
-\[
-\boxed{
-D
-=
-\operatorname{smin}_k(D_1,D_2).
-}
-\]
-
-As
-
-\[
-k\to\infty,
-\]
-
-we recover
-
-\[
-\operatorname{smin}_k(a,b)\to\min(a,b).
-\]
-
-This allows a continuous blending region rather than a hard branch boundary.
-
----
-
-# 34. Generalization VI: Soft Absolute Value
-
-The absolute value
-
-\[
-|x|
-\]
-
-has a cusp at
-
-\[
-x=0.
-\]
-
-A smooth approximation is
-
-\[
-|x|
-\approx
-\sqrt{x^2+\varepsilon^2}.
-\]
-
-Thus
-
-\[
-|g(x)|
-\]
-
-can be replaced by
-
-\[
-\sqrt{g(x)^2+\varepsilon^2}.
-\]
-
-Likewise,
-
-\[
-|s-6|
-\]
-
-becomes
-
-\[
-\sqrt{(s-6)^2+\varepsilon^2}.
-\]
-
-This improves differentiability:
-
-\[
-\boxed{
-|x|
-\rightsquigarrow
-\sqrt{x^2+\varepsilon^2}.
-}
-\]
-
-This becomes especially useful when computing analytic normals or derivatives.
-
----
-
-# 35. Generalization VII: Better Glow Kernels
-
-The current glow kernel is
-
-\[
-K(d)=\frac1{d^2}.
-\]
-
-This diverges as
-
-\[
-d\to0.
-\]
-
-A numerically safer regularization is
-
-\[
-\boxed{
-K_\varepsilon(d)
-=
-\frac1{d^2+\varepsilon^2}.
-}
-\]
-
-Another option is exponential falloff:
-
-\[
-\boxed{
-K(d)=e^{-kd}.
-}
-\]
-
-A compact Gaussian-like glow is
-
-\[
-\boxed{
-K(d)=e^{-k d^2}.
-}
-\]
-
-A controllable inverse-power family is
-
-\[
-\boxed{
-K(d)=\frac1{(d^2+\varepsilon^2)^{p/2}}.
-}
-\]
-
-The shader corresponds approximately to
-
-\[
-p=2.
-\]
-
-Thus one can treat the rendering model as a parameterized kernel family rather than a mysterious magic constant.
-
----
-
-# 36. Generalization VIII: Physically Inspired Falloff
-
-For a point-like source in three spatial dimensions, physically motivated kernels often involve powers of distance such as
-
-\[
-\frac1{r^2}.
-\]
-
-The shader uses
-
-\[
-\frac1{d^2},
-\]
-
-but here \(d\) is not necessarily the Euclidean distance from a point light.
-
-Rather,
-
-\[
-d=D(x)
-\]
-
-is the distance-estimator output.
+$$
+ c(s,t)=\cos\phi(s,t).
+$$
 
 Therefore
 
-\[
-\frac1{D(x)^2}
-\]
-
-can be interpreted as a pseudo-radiometric proximity field.
-
-This distinction is important:
-
-\[
-\boxed{
-\frac1{d^2}
-\text{ does not automatically make the rendering physically based.}
-}
-\]
-
-It simply gives strong near-surface emphasis.
-
----
-
-# 37. Generalization IX: Iterated Domain Warping
-
-The shader performs one nonlinear rotation.
-
-We can iterate the warp:
-
-\[
-x_{k+1}
-=
-W(x_k,t),
-\qquad
-x_0=q.
-\]
-
-After \(K\) iterations,
-
-\[
-\boxed{
-x_K
-=
-W^{\circ K}(q,t).
-}
-\]
-
-Then the base field becomes
-
-\[
-F(q,t)
-=
-g(x_K).
-\]
-
-This generates significantly more complicated structures.
-
-The danger is that composition multiplies derivative magnitudes.
-
-If
-
-\[
-J_W(x)
-\]
-
-is the Jacobian of the warp, then
-
-\[
-J_{W^{\circ K}}
-=
-J_W(x_{K-1})
-\cdots
-J_W(x_0).
-\]
-
-Consequently,
-
-\[
-\|J_{W^{\circ K}}\|
-\]
-
-can grow rapidly.
-
-This is exactly where procedural shaders can become numerically unstable.
-
----
-
-# 38. Generalization X: Jacobian-Based Procedural Geometry
-
-For a warped field
-
-\[
-F(x)=F_0(W(x)),
-\]
-
-the chain rule gives
-
-\[
-\boxed{
-\nabla F(x)
-=
-J_W(x)^T
-\nabla F_0(W(x)).
-}
-\]
-
-This is a fundamental equation for domain-warped SDFs.
-
-The original shader implicitly performs
-
-\[
-F_0(W(x))
-\]
-
-but does not explicitly calculate
-
-\[
-J_W.
-\]
-
-If you do calculate it, you gain access to:
-
-\[
-\text{analytic normals},
-\]
-
-\[
-\text{curvature},
-\]
-
-\[
-\text{gradient magnitude},
-\]
-
-\[
-\text{Lipschitz bounds},
-\]
-
-and potentially better sphere-tracing step control.
-
-This is the mathematical route from "cool shader trick" toward a more rigorous geometric system.
-
----
-
-# 39. Differentiating the Rotation Axis
-
-The axis is
-
-\[
-a(s,t)=\frac{c(s,t)}{\|c(s,t)\|},
-\]
-
-with
-
-\[
-c(s,t)=\cos\phi(s,t).
-\]
-
-For a normalized vector
-
-\[
-a=\frac{c}{\|c\|},
-\]
-
-the derivative satisfies
-
-\[
-\boxed{
-\frac{\partial a}{\partial s}
-=
-\frac1{\|c\|}
-\left(I-aa^T\right)
-\frac{\partial c}{\partial s}.
-}
-\]
-
-Now
-
-\[
+$$
 \frac{\partial c}{\partial s}
-=
--0.3
-\sin\phi.
-\]
+=-0.3\sin\phi,
+$$
 
-Thus
+so
 
-\[
+$$
 \boxed{
 \frac{\partial a}{\partial s}
 =
 -\frac{0.3}{\|c\|}
-\left(I-aa^T\right)
-\sin\phi.
+(I-aa^T)\sin\phi.
 }
-\]
+$$
 
-The matrix
+The projector
 
-\[
+$$
 I-aa^T
-\]
+$$
 
-projects onto the tangent plane of the unit sphere at \(a\).
+removes the component parallel to $a$.
 
-Therefore the derivative of normalization removes the radial component of the raw derivative.
-
-This is a useful geometric identity far beyond this shader.
+This is the standard differential formula for normalizing a vector field.
 
 ---
 
-# 40. Why the Warp Is Locally Special
+## 23. Generalized Rotation Field
 
-For fixed \(a\),
+The fixed angle $-\pi/2$ can be generalized to a spatially and temporally varying angle
 
-\[
-R_a\in SO(3).
-\]
+$$
+\theta=\theta(s,t).
+$$
 
-Thus
+Rodrigues' formula gives
 
-\[
-J_R^TJ_R=I.
-\]
+$$
+\boxed{
+W(q,s,t)
+=
+q\cos\theta
++(a\times q)\sin\theta
++a(a\cdot q)(1-\cos\theta).
+}
+$$
+
+For example,
+
+$$
+\theta(s,t)=\theta_0+\alpha s+\beta t
+$$
+
+creates a radial and temporal twist.
+
+The original shader is the special case
+
+$$
+\theta=-\frac\pi2.
+$$
+
+---
+
+## 24. Fourier Orientation Fields
+
+The single cosine harmonic can be generalized to a finite Fourier field:
+
+$$
+\boxed{
+ a(s,t)=
+\operatorname{normalize}
+\left[
+\sum_{k=1}^{K}
+ A_k\cos(\omega_k s+\nu_k t+\phi_k)
+\right].
+}
+$$
+
+This gives direct control over radial frequency, temporal frequency, amplitude, and phase.
+
+The current shader is essentially the single-harmonic case with three different fixed phase offsets.
+
+---
+
+## 25. Smooth Union
+
+The hard minimum
+
+$$
+\min(a,b)
+$$
+
+can be replaced by a smooth minimum such as
+
+$$
+\boxed{
+\operatorname{smin}_k(a,b)
+=
+-\frac1k\log\left(e^{-ka}+e^{-kb}\right).
+}
+$$
+
+As
+
+$$
+k\to\infty,
+$$
+
+we obtain
+
+$$
+\operatorname{smin}_k(a,b)\to\min(a,b).
+$$
+
+This is useful when constructing differentiable geometry.
+
+---
+
+## 26. Smooth Absolute Value
+
+The absolute value function has a nondifferentiable point at zero.
+
+A smooth approximation is
+
+$$
+\boxed{
+|x|\approx\sqrt{x^2+\varepsilon^2}.
+}
+$$
 
 Therefore
 
-\[
-\|J_Rv\|=\|v\|.
-\]
+$$
+|g(x)|
+$$
 
-The rotation itself is perfectly conditioned.
+can be replaced by
 
-The complication comes entirely from
+$$
+\sqrt{g(x)^2+\varepsilon^2}.
+$$
 
-\[
-a=a(\|q\|,t).
-\]
+Likewise,
 
-Thus the field is not difficult because rotations are unstable.
+$$
+|s-6|
+$$
 
-It is difficult because the **rotation parameter is itself a function of position**.
+can be replaced by
 
-This distinction is important when designing more advanced procedural fields.
+$$
+\sqrt{(s-6)^2+\varepsilon^2}.
+$$
 
----
-
-# 41. The Shader as a Composition of Operators
-
-A compact mathematical factorization is:
-
-\[
-\boxed{
-\mathcal R_t
-=
-\mathcal T_{\mathrm{tone}}
-\circ
-\mathcal A_{\mathrm{glow}}
-\circ
-\mathcal M_{\mathrm{march}}
-\circ
-\mathcal D_{\mathrm{field}}
-\circ
-\mathcal W_t
-\circ
-\mathcal P.
-}
-\]
-
-Where:
-
-\[
-\mathcal P:
-z\mapsto z\hat{\omega}+9e_z
-\]
-
-is the ray parameterization;
-
-\[
-\mathcal W_t:
-q\mapsto
-R_{a(\|q\|,t)}(-\pi/2)q
-\]
-
-is the domain warp;
-
-\[
-\mathcal D_{\mathrm{field}}
-\]
-
-constructs the hybrid distance field;
-
-\[
-\mathcal M_{\mathrm{march}}
-\]
-
-generates
-
-\[
-z_{n+1}=z_n+D_n;
-\]
-
-\[
-\mathcal A_{\mathrm{glow}}
-\]
-
-computes
-
-\[
-\sum_n \frac{H_n}{D_n^2};
-\]
-
-and
-
-\[
-\mathcal T_{\mathrm{tone}}
-\]
-
-performs
-
-\[
-\tanh.
-\]
-
-This decomposition is much more useful for shader design than memorizing the original one-liner.
+This is particularly useful when analytic gradients and normals are required.
 
 ---
 
-# 42. Tone Mapping
+## 27. Alternative Glow Kernels
 
-The final operation is
+The current kernel is
 
-\[
-C=\tanh(O/30000).
-\]
+$$
+K(d)=d^{-2}.
+$$
 
-The hyperbolic tangent has the properties
+A regularized version is
 
-\[
-\tanh(0)=0,
-\]
-
-and
-
-\[
-\lim_{x\to+\infty}\tanh x=1.
-\]
-
-Its derivative is
-
-\[
-\frac{d}{dx}\tanh x
-=
-1-\tanh^2x.
-\]
-
-Therefore very large accumulated values are compressed:
-
-\[
-O\gg30000
-\quad\Longrightarrow\quad
-C\approx1.
-\]
-
-This is a nonlinear saturation operator.
-
-Hence the complete mapping is
-
-\[
+$$
 \boxed{
-C_i
-=
-\tanh
-\left(
-\frac{O_i}{30000}
-\right).
+K_\varepsilon(d)=\frac1{d^2+\varepsilon^2}.
 }
-\]
+$$
 
-The shader intentionally allows the raw accumulation to become enormous and relies on the nonlinear output map to compress it.
+An exponential kernel is
+
+$$
+\boxed{
+K(d)=e^{-kd}.
+}
+$$
+
+A Gaussian-like kernel is
+
+$$
+\boxed{
+K(d)=e^{-kd^2}.
+}
+$$
+
+A generalized inverse-power family is
+
+$$
+\boxed{
+K(d)=\frac1{(d^2+\varepsilon^2)^{p/2}}.
+}
+$$
+
+The shader approximately corresponds to
+
+$$
+p=2.
+$$
+
+Thus the appearance model can be regarded as a tunable proximity kernel.
 
 ---
 
-# 43. Numerical Interpretation of the Whole Algorithm
+## 28. Iterated Domain Warping
 
-The shader can therefore be viewed as solving the following problem:
+Instead of applying the warp once, define
 
-Given a ray
-
-\[
-q(z)=z\hat{\omega}+9e_z,
-\]
-
-construct a scalar field
-
-\[
-D(q,t)
-\]
-
-using a position-dependent \(SO(3)\) transformation and a hybrid implicit geometry.
-
-Then numerically integrate a singular response
-
-\[
-K(D)=D^{-2}
-\]
-
-along an adaptively sampled ray.
-
-Symbolically,
-
-\[
-\boxed{
-C(\hat{\omega},t)
-=
-\tanh
-\left[
-\frac1{30000}
-\sum_n
-K(D(q_n,t))
-H(q_n,t)
-\right].
-}
-\]
-
-The sampling rule itself depends on the same field:
-
-\[
-\boxed{
-q_{n+1}
-=
-q_n
-+
-D(q_n,t)\hat{\omega}.
-}
-\]
-
-Thus the field determines both:
-
-\[
-\text{where the samples occur}
-\]
-
-and
-
-\[
-\text{how strongly those samples contribute}.
-\]
-
-That feedback is what makes this style of shader particularly expressive.
-
----
-
-# 44. The Most General Template Behind the Shader
-
-A very general procedural raymarcher can be written mathematically as
-
-\[
-q_n=q_0+z_n\hat{\omega},
-\]
-
-\[
-x_n=W(q_n,t,\sigma_n),
-\]
-
-\[
-\sigma_n=S(x_n,t,\sigma_n),
-\]
-
-\[
-D_n=F(x_n,\sigma_n),
-\]
-
-\[
-z_{n+1}=z_n+D_n,
-\]
-
-\[
-L_{n+1}
-=
-L_n+
-K(D_n,x_n,t),
-\]
-
-and finally
-
-\[
-C=T(L_N).
-\]
-
-Your shader is simply one particular member of this family:
-
-\[
-\boxed{
-W=\text{radially modulated rotation},
-}
-\]
-
-\[
-\boxed{
-S=\text{Euclidean norm},
-}
-\]
-
-\[
-\boxed{
-F=\text{minimum of trigonometric and spherical fields},
-}
-\]
-
-\[
-\boxed{
-K\sim D^{-2},
-}
-\]
-
-\[
-\boxed{
-T=\tanh.
-}
-\]
-
-This abstraction is worth remembering.
-
----
-
-# 45. A Better Mental Model for Designing Similar Shaders
-
-Instead of asking
-
-\[
-\text{``What equation makes this exact shape?''}
-\]
-
-ask the following mathematical questions:
-
-### Base manifold
-
-Choose
-
-\[
-F_0(x)=0.
-\]
-
-### Domain transformation
-
-Construct
-
-\[
-W(x,t).
-\]
-
-### Composite manifold
-
-Use
-
-\[
-F(x,t)=F_0(W(x,t)).
-\]
-
-### Distance heuristic
-
-Construct
-
-\[
-D(x,t)\approx\operatorname{dist}(x,\{F=0\}).
-\]
-
-### Marching dynamics
-
-Use
-
-\[
-z_{n+1}=z_n+D_n.
-\]
-
-### Appearance field
-
-Choose
-
-\[
-K(D,x,t).
-\]
-
-### Tone map
-
-Choose
-
-\[
-T.
-\]
-
-This gives the design equation
-
-\[
-\boxed{
-C
-=
-T
-\left[
-\sum_n
-K
-\left(
-D(W(q_n))
-\right)
-\right].
-}
-\]
-
-That formula is the real reusable idea.
-
----
-
-# 46. Three Especially Powerful Extensions
-
-## 46.1 Rotational flow field
-
-Replace the fixed angle by
-
-\[
-\theta=\lambda s+\omega t.
-\]
-
-Then
-
-\[
-x
-=
-R_{a(s,t)}(\theta(s,t))q.
-\]
-
-This creates a radial twisting field.
-
----
-
-## 46.2 Recursive warp
-
-Let
-
-\[
+$$
 x_0=q,
-\]
+$$
 
-and
+and recursively
 
-\[
-x_{k+1}
-=
-R_{a(\|x_k\|,t)}
-\left(\theta(\|x_k\|,t)\right)x_k.
-\]
+$$
+\boxed{
+x_{k+1}=W(x_k,t).
+}
+$$
 
-Then
+After $K$ iterations,
 
-\[
+$$
+ x_K=W^{\circ K}(q,t).
+$$
+
+The final field is
+
+$$
+\boxed{
 F(q,t)=F_0(x_K).
-\]
+}
+$$
 
-This gives a hierarchy:
+The Jacobian becomes
 
-\[
-K=1
-\Rightarrow
-\text{simple warp},
-\]
+$$
+J_{W^{\circ K}}
+=
+J_W(x_{K-1})\cdots J_W(x_0).
+$$
 
-\[
-K=2
-\Rightarrow
-\text{nested warp},
-\]
+Hence repeated composition can cause the derivative magnitude to grow dramatically.
 
-\[
-K\gg1
-\Rightarrow
-\text{highly intricate procedural field}.
-\]
+That is both a source of visual richness and a source of numerical instability.
 
 ---
 
-## 46.3 Multiscale field
+## 29. Multiscale Procedural Fields
 
-Define
+A simple field can be turned into a multiscale construction using
 
-\[
+$$
+\boxed{
 F(x)
 =
 \sum_{k=0}^{K}
-\lambda_k
-F_0(2^kx).
-\]
+\lambda_kF_0(2^kx).
+}
+$$
 
-Then warp the result:
+After applying a warp,
 
-\[
+$$
 \boxed{
 F_{\mathrm{final}}(x,t)
 =
 \sum_{k=0}^{K}
 \lambda_k
-F_0
-\left(
-2^kW(x,t)
-\right).
+F_0(2^kW(x,t)).
 }
-\]
+$$
 
-This introduces controlled spatial frequencies and produces fractal-like structure.
+This creates controlled spatial frequencies and can produce fractal-like procedural structures.
 
 ---
 
-# 47. A Useful Design Hierarchy
+## 30. A General Procedural Ray-Marching Framework
 
-The shader's construction can be organized mathematically from simplest to most complicated:
+The shader is a specific instance of the following general system.
 
-\[
+Start with a ray
+
+$$
+q_n=q_0+z_n\hat\omega.
+$$
+
+Construct a state-dependent warp
+
+$$
+ x_n=W(q_n,t,\sigma_n).
+$$
+
+Construct a state variable
+
+$$
+\sigma_n=S(x_n,t,\sigma_n).
+$$
+
+Construct a distance estimator
+
+$$
+ d_n=F(x_n,\sigma_n).
+$$
+
+Advance the ray:
+
+$$
+ z_{n+1}=z_n+d_n.
+$$
+
+Accumulate appearance:
+
+$$
+ L_{n+1}=L_n+K(d_n,x_n,t).
+$$
+
+Finally tone map:
+
+$$
+ C=T(L_N).
+$$
+
+Therefore the general rendering architecture is
+
+$$
 \boxed{
-\text{primitive}
+q
 \rightarrow
-\text{implicit field}
+W
 \rightarrow
-\text{domain warp}
+F
 \rightarrow
-\text{field composition}
-\rightarrow
-\text{distance estimator}
-\rightarrow
-\text{ray dynamics}
-\rightarrow
-\text{radiance kernel}.
-}
-\]
-
-For example:
-
-\[
-\text{sphere}
-\]
-
-becomes
-
-\[
-s-1
-\]
-
-then
-
-\[
-F(W(x))
-\]
-
-then
-
-\[
-\min(F_1,F_2)
-\]
-
-then
-
-\[
-z_{n+1}=z_n+D_n
-\]
-
-then
-
-\[
-L\sim\sum D_n^{-2}.
-\]
-
-The geometry and the appearance are therefore separate mathematical layers.
-
----
-
-# 48. The Core Formula to Keep in Your Reference Book
-
-If you only keep one abstraction from this shader, keep this:
-
-\[
-\boxed{
-\begin{aligned}
-q(z)&=q_0+z\hat{\omega},\\[2mm]
-s&=\|q\|,\\[2mm]
-a&=
-\operatorname{normalize}
-\left[
-\cos(\phi_0+\omega t+\lambda s)
-\right],\\[2mm]
-x&=
-R_a(\theta)q,\\[2mm]
-F(x)&=\text{procedural implicit field},\\[2mm]
-D(x)&=\operatorname{combine}(F,\text{radial fields}),\\[2mm]
-z_{n+1}&=z_n+D_n,\\[2mm]
-L&=
-\sum_n
-\frac{H(x_n)}
-{D_n^p+\varepsilon},\\[2mm]
-C&=T(L).
-\end{aligned}
-}
-\]
-
-The supplied shader is approximately the parameter choice
-
-\[
-\boxed{
-\theta=-\frac{\pi}{2},
-}
-\]
-
-\[
-\boxed{
-\phi_0=(0,2,4),
-}
-\]
-
-\[
-\boxed{
-\omega=-\frac12,
-}
-\]
-
-\[
-\boxed{
-\lambda=0.3,
-}
-\]
-
-\[
-\boxed{
-F(x,y,z)=x\sin y+y\sin z+z\sin x,
-}
-\]
-
-\[
-\boxed{
 D
-=
-0.2
-\min
-\left[
-0.2|F(x)|
-+\max(s-5,0.1),
-\;
-|s-6|+0.2
-\right],
+\rightarrow
+\text{adaptive sampling}
+\rightarrow
+K
+\rightarrow
+T.
 }
-\]
+$$
 
-\[
-\boxed{
-p=2,
-}
-\]
+Your shader chooses
 
-and
+$$
+W(q)=R_{a(\|q\|,t)}\left(-\frac\pi2\right)q,
+$$
 
-\[
-\boxed{
-T(u)=\tanh(u/30000).
-}
-\]
+$$
+F_0(x,y,z)=x\sin y+y\sin z+z\sin x,
+$$
 
-That is the reusable mathematical template behind the one-liner.
+and a minimum between a periodic field and a radial shell.
 
 ---
 
-# 49. Final Interpretation
+## 31. Final Discrete Rendering Formula
 
-The entire shader can ultimately be summarized as the following mathematical pipeline:
+Define
 
-\[
+$$
+\hat\omega
+=
+\frac{2FC-r_{xyy}}
+{\left\|2FC-r_{xyy}\right\|}.
+$$
+
+For every marching step $n$,
+
+$$
+q_n=z_n\hat\omega+9e_z,
+$$
+
+$$
+ s_n=\|q_n\|,
+$$
+
+$$
+a_n=
+\frac{
+\cos((0,2,4)^T-\frac t2\mathbf 1+0.3s_n\mathbf 1)
+}{
+\left\|
+\cos((0,2,4)^T-\frac t2\mathbf 1+0.3s_n\mathbf 1)
+\right\|},
+$$
+
+$$
+x_n=(a_n\cdot q_n)a_n-a_n\times q_n,
+$$
+
+$$
+g_n=x_{n,x}\sin x_{n,y}
++x_{n,y}\sin x_{n,z}
++x_{n,z}\sin x_{n,x},
+$$
+
+$$
+A_n=0.2|g_n|+\max(s_n-5,0.1),
+$$
+
+$$
+B_n=|s_n-6|+0.2,
+$$
+
+$$
 \boxed{
-\hat{\omega}
-\longrightarrow
-q(z)
-\longrightarrow
-s=\|q\|
-\longrightarrow
-a(s,t)
-\longrightarrow
-R_{a(s,t)}q
-\longrightarrow
-g(x)
-\longrightarrow
-D(x)
-\longrightarrow
-z_{n+1}=z_n+D_n
-\longrightarrow
-\sum D_n^{-2}
-\longrightarrow
-\tanh.
+ d_n=0.2\min(A_n,B_n).
 }
-\]
+$$
 
-More compactly:
+The ray recurrence is
 
-\[
+$$
+\boxed{
+ z_{n+1}=z_n+d_n.
+}
+$$
+
+The accumulated radiance is
+
+$$
+\boxed{
+O_N
+=
+\sum_{n=0}^{N-1}
+\frac{
+\max\left(
+\cos(0.4x_{n,x}+\phi),
+5/s_n^2
+\right)
+}{d_n^2}.
+}
+$$
+
+Finally,
+
+$$
 \boxed{
 C
+=
+\tanh\left(\frac{O_N}{30000}\right).
+}
+$$
+
+The iteration terminates approximately when
+
+$$
+\boxed{
+z_n+n\ge200.}
+$$
+
+---
+
+## 32. The Final Closed Mathematical Form
+
+Combining all definitions gives the shader's rendering model:
+
+$$
+\boxed{
+C(FC,t)
 =
 \tanh
 \left[
 \frac1{30000}
 \sum_{n}
 \frac{
-\max
-\left(
-\cos(0.4x_{n,x}+\phi),
+\max\left(
+\cos(0.4x_{n,x}+(0,2,4)),
 5/s_n^2
 \right)
 }{
@@ -3642,75 +1623,229 @@ C
 \right]
 \right)^2
 }
-\right]
+\right].
 }
-\]
+$$
 
-with
+where
 
-\[
-\boxed{
-x_n
-=
-R_{a_n}\left(-\frac{\pi}{2}\right)
-\left(
-z_n\hat{\omega}+9e_z
-\right),
-}
-\]
+$$
+q_n=z_n\hat\omega+9e_z,
+$$
 
-\[
-\boxed{
-a_n
-=
-\operatorname{normalize}
-\left[
-\cos
-\left(
-(0,2,4)^T-\frac t2\mathbf1+0.3s_n\mathbf1
-\right)
-\right],
-}
-\]
+$$
+ s_n=\|q_n\|,
+$$
 
-\[
-\boxed{
-s_n
-=
-\sqrt{
-z_n^2
-+
-18z_n\hat{\omega}_z
-+
-81
-},
-}
-\]
+$$
+a_n=
+\frac{
+\cos((0,2,4)^T-\frac t2\mathbf1+0.3s_n\mathbf1)
+}{
+\left\|
+\cos((0,2,4)^T-\frac t2\mathbf1+0.3s_n\mathbf1)
+\right\|},
+$$
+
+$$
+x_n=(a_n\cdot q_n)a_n-a_n\times q_n,
+$$
 
 and
 
-\[
+$$
+ g(x,y,z)=x\sin y+y\sin z+z\sin x.
+$$
+
+The ray positions satisfy
+
+$$
+ z_{n+1}=z_n+d_n.
+$$
+
+This is the complete mathematical specification of the shader's intended algorithm.
+
+---
+
+## 33. The Core Reusable Formula
+
+The most reusable abstraction is not the particular trigonometric surface. It is the composition
+
+$$
 \boxed{
-z_{n+1}=z_n+D_n.
+C
+=
+T
+\left[
+\sum_n
+K\left(D(W(q_n,t)),x_n,t\right)
+\right],
+\qquad
+q_{n+1}=q_n+D(W(q_n,t))\hat\omega.
 }
-\]
+$$
 
-The deepest idea here is not the particular function
+More explicitly,
 
-\[
-x\sin y+y\sin z+z\sin x.
-\]
+$$
+\boxed{
+\begin{aligned}
+q(z)&=q_0+z\hat\omega,\\
+s&=\|q\|,\\
+a&=\operatorname{normalize}\left[\cos(\phi_0+\omega t+\lambda s)\right],\\
+x&=R_a(\theta)q,\\
+F&=F_0(x),\\
+D&=\operatorname{combine}(F,\text{radial fields}),\\
+z_{n+1}&=z_n+D_n,\\
+L&=\sum_n\frac{H(x_n)}{D_n^p+\varepsilon},\\
+C&=T(L).
+\end{aligned}
+}
+$$
 
-It is the composition
+The original shader is one parameter choice in this much larger design space.
 
-\[
+---
+
+## 34. Design Principles Extracted from the Shader
+
+The shader suggests a useful procedural-geometry workflow.
+
+### Base field
+
+Choose an implicit field
+
+$$
+F_0(x)=0.
+$$
+
+### Domain warp
+
+Choose a transformation
+
+$$
+W(x,t).
+$$
+
+### Composite field
+
+Use
+
+$$
+F(x,t)=F_0(W(x,t)).
+$$
+
+### Distance estimator
+
+Construct
+
+$$
+D(x,t)\approx\operatorname{dist}(x,F=0).
+$$
+
+### Ray dynamics
+
+Use
+
+$$
+z_{n+1}=z_n+D_n.
+$$
+
+### Appearance kernel
+
+Choose
+
+$$
+K(D,x,t).
+$$
+
+### Tone mapping
+
+Choose
+
+$$
+T(L).
+$$
+
+The general construction is therefore
+
+$$
+\boxed{
+\text{geometry}
++
+\text{domain warp}
++
+\text{distance estimator}
++
+\text{adaptive sampling}
++
+\text{appearance kernel}.
+}
+$$
+
+This is the underlying mathematical pattern worth remembering.
+
+---
+
+## 35. Final Conceptual Compression
+
+The shader can be compressed mathematically to the pipeline
+
+$$
+\boxed{
+\hat\omega
+\rightarrow
+q(z)
+\rightarrow
+s=\|q\|
+\rightarrow
+ a(s,t)
+\rightarrow
+R_aq
+\rightarrow
+g(x)
+\rightarrow
+D(x)
+\rightarrow
+z_{n+1}=z_n+D_n
+\rightarrow
+\sum D_n^{-2}
+\rightarrow
+\tanh.
+}
+$$
+
+The deepest idea is therefore
+
+$$
 \boxed{
 \text{simple implicit geometry}
 \;\circ\;
 \text{position-dependent transformation}
 \;\circ\;
-\text{adaptive ray dynamics}.
+\text{adaptive numerical integration}
 }
-\]
+$$
 
-Once that structure is understood, thousands of these apparently insane demoscene one-liners stop looking like black magic and start looking like what they really are: compact compositions of geometry, analysis, and numerical approximation. The syntax is still criminally hostile to human beings, naturally, but the mathematics underneath is surprisingly orderly.
+The particular functions can all be replaced.
+
+The framework survives.
+
+---
+
+## 36. Useful Generalizations at a Glance
+
+| Component | Current shader | Generalization |
+|---|---|---|
+| Ray | $q=z\hat\omega+9e_z$ | arbitrary camera transform |
+| Axis | normalized cosine field | Fourier / noise / analytic vector field |
+| Rotation | $R_a(-\pi/2)$ | $R_a(\theta(s,t))$ |
+| Base field | $x\sin y+y\sin z+z\sin x$ | arbitrary implicit field $F_0$ |
+| Union | $\min(F_1,F_2)$ | smooth minimum |
+| Absolute value | $|x|$ | $\sqrt{x^2+\varepsilon^2}$ |
+| Glow | $1/d^2$ | exponential, Gaussian, regularized power law |
+| Warp count | one | recursive $W^{\circ K}$ |
+| Field scale | single frequency | multiscale Fourier / fractal sum |
+| Tone mapping | $\tanh(L/30000)$ | Reinhard, exponential, ACES-like mappings |
+
+The result is a general procedural rendering language built from composition rather than from one giant closed-form surface equation.
