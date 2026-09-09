@@ -58,6 +58,10 @@
 !_TAG_ROLE_DESCRIPTION!C!struct	foreigndecl	/declared in foreign languages/
 !_TAG_ROLE_DESCRIPTION!Sh!heredoc	endmarker	/end marker/
 !_TAG_ROLE_DESCRIPTION!Sh!script	loaded	/loaded/
+1) Early-Z kills overdraw (the whole point)	depthpass.md	/^### 1) Early-Z kills overdraw (the whole point)$/;"	S	section:🧠 Why draw the same model *after* depth?
+2) Expensive shaders stay expensive (so don’t run them twice)	depthpass.md	/^### 2) Expensive shaders stay expensive (so don’t run them twice)$/;"	S	section:🧠 Why draw the same model *after* depth?
+3) Consistent depth for later passes	depthpass.md	/^### 3) Consistent depth for later passes$/;"	S	section:🧠 Why draw the same model *after* depth?
+4) It stabilizes rendering artifacts	depthpass.md	/^### 4) It stabilizes rendering artifacts$/;"	S	section:🧠 Why draw the same model *after* depth?
 EOF	compilead.sh	/^cat > "$SUMMARY" <<EOF$/;"	h
 L2	ok.s	/^.L2:$/;"	l
 LC0	ok.s	/^.LC0:$/;"	l
@@ -97,3 +101,9 @@ sanitize_output	compilead.sh	/^sanitize_output() {$/;"	f
 undef	codestyleandsemantics.md	/^#undef X$/;"	h	section:};
 }	codestyleandsemantics.md	/^}$/;"	s
 };	codestyleandsemantics.md	/^};$/;"	s
+⚠️ When you *don’t* need a depth prepass	depthpass.md	/^## ⚠️ When you *don’t* need a depth prepass$/;"	s
+🎯 What this means for your API	depthpass.md	/^## 🎯 What this means for your API$/;"	s
+🧠 Mental model upgrade	depthpass.md	/^## 🧠 Mental model upgrade$/;"	s
+🧠 What a depth prepass actually does	depthpass.md	/^## 🧠 What a depth prepass actually does$/;"	s
+🧠 Why draw the same model *after* depth?	depthpass.md	/^## 🧠 Why draw the same model *after* depth?$/;"	s
+🧨 Brutal truth	depthpass.md	/^## 🧨 Brutal truth$/;"	s

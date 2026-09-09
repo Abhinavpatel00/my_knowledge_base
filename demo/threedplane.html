@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>3D Plane Arrangement</title>
+
+  <style>
+    /*
+    ================================================================
+    GLOBAL LAYOUT
+    ================================================================
+
+                         APPLICATION
+                  ┌─────────────────────────┐
+                  │                         │
+          CONTROLS│       3D SPACE          │
+                  │                         │
+                  │     / plane             │
+                  │    /                    │
+                  │   /                     │
+                  └─────────────────────────┘
+
+    The left side controls the planes.
+    The right side renders the arrangement.
+    */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #090c10;
+      --panel: #11161c;
+      --panel2: #0c1015;
+      --border: #29323d;
+
+      --text: #e7edf3;
+      --muted: #8995a2;
+
+      --accent: #7dd3fc;
+    }
+
+    body {
+      margin: 0;
+
+      min-height: 100vh;
+
+      background: var(--bg);
+      color: var(--text);
+
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      display: grid;
+
+      grid-template-columns: 330px minmax(0, 1fr);
+    }
+
+    /*
+    ================================================================
+    SIDEBAR
+    ================================================================
+    */
+
+    aside {
+      background: var(--panel);
+
+      border-right:
+        1px solid var(--border);
+
+      padding: 20px;
+
+      overflow-y: auto;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+
+      font-size: 20px;
+    }
+
+    .description {
+      color: var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.5;
+
+      margin-bottom: 20px;
+    }
+
+    /*
+    ---------------------------------------------------------------
+    REGION COUNTER
+    ---------------------------------------------------------------
+    */
+
+    .stat-label {
+      color: var(--muted);
+
+      font-size: 11px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.08em;
+    }
+
+    .region-number {
+      font-size: 42px;
+
+      font-weight: 700;
+
+      line-height: 1;
+
+      margin:
+        5px 0 12px;
+    }
+
+    .maximum {
+      color: var(--accent);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 12px;
+
+      background: var(--panel2);
+
+      border: 1px solid var(--border);
+
+      border-radius: 8px;
+
+      padding: 10px;
+
+      line-height: 1.6;
+
+      margin-bottom: 15px;
+    }
+
+    /*
+    ================================================================
+    ADD BUTTON
+    ================================================================
+    */
+
+    button {
+      min-height: 42px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 7px;
+
+      background: #171d24;
+
+      color: var(--text);
+
+      padding:
+        7px 12px;
+
+      cursor: pointer;
+
+      transition:
+        background 0.15s,
+        border-color 0.15s;
+    }
+
+    button:hover {
+      background: #202831;
+
+      border-color: #465362;
+    }
+
+    .add-button {
+      width: 100%;
+
+      margin-bottom: 15px;
+
+      font-weight: 600;
+
+      font-size: 14px;
+    }
+
+    /*
+    ================================================================
+    PLANE CONTROLS
+    ================================================================
+    */
+
+    .plane {
+      border-top:
+        1px solid var(--border);
+
+      padding:
+        13px 0;
+    }
+
+    .plane-header {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      margin-bottom: 8px;
+    }
+
+    .plane-name {
+      font-size: 13px;
+
+      font-weight: 600;
+    }
+
+    .remove-button {
+      min-height: 30px;
+
+      font-size: 11px;
+
+      padding:
+        3px 8px;
+    }
+
+    /*
+    A plane is
+
+        ax + by + cz = d
+
+    Therefore each plane has four parameters:
+
+        a
+        b
+        c
+        d
+    */
+
+    .parameter {
+      display: grid;
+
+      grid-template-columns:
+        18px
+        minmax(0, 1fr)
+        55px;
+
+      gap: 7px;
+
+      align-items: center;
+
+      margin: 7px 0;
+
+      font-size: 12px;
+
+      color: var(--muted);
+    }
+
+    .parameter input[type="range"] {
+      width: 100%;
+    }
+
+    .parameter input[type="number"] {
+      width: 55px;
+
+      background: #090c10;
+
+      color: var(--text);
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 5px;
+
+      padding: 5px;
+    }
+
+    /*
+    ================================================================
+    RESET
+    ================================================================
+    */
+
+    .reset-button {
+      width: 100%;
+
+      margin-top: 10px;
+    }
+
+    /*
+    ================================================================
+    CANVAS
+    ================================================================
+    */
+
+    main {
+      min-width: 0;
+
+      min-height: 100vh;
+
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      cursor: grab;
+
+      touch-action: none;
+    }
+
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    /*
+    ================================================================
+    HUD
+    ================================================================
+    */
+
+    .hud {
+      position: absolute;
+
+      left: 18px;
+      top: 18px;
+
+      background:
+        rgba(10, 13, 17, 0.82);
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 8px;
+
+      padding:
+        10px 12px;
+
+      font:
+        12px/1.6
+        monospace;
+
+      color: var(--text);
+
+      backdrop-filter:
+        blur(10px);
+    }
+
+    .hud strong {
+      color: var(--accent);
+    }
+
+    /*
+    ================================================================
+    MOBILE
+    ================================================================
+    */
+
+    @media (max-width: 800px) {
+
+      body {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        border-right: none;
+
+        border-bottom:
+          1px solid var(--border);
+
+        max-height: 50vh;
+      }
+
+      main {
+        min-height: 60vh;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <!--
+  ================================================================
+  CONTROL PANEL
+  ================================================================
+  -->
+
+  <aside>
+
+    <h1>Plane Arrangement in R³</h1>
+
+    <div class="description">
+      Add planes and observe how they divide three-dimensional
+      space into regions.
+    </div>
+
+
+    <!-- REGION COUNTER -->
+
+    <div class="stat-label">
+      Current regions
+    </div>
+
+    <div
+      id="regionCount"
+      class="region-number"
+    >
+      1
+    </div>
+
+
+    <div class="stat-label">
+      Planes
+    </div>
+
+    <div
+      id="planeCount"
+      style="margin: 5px 0 15px"
+    >
+      0
+    </div>
+
+
+    <!--
+    ================================================================
+    GENERAL POSITION FORMULA
+    ================================================================
+
+    For n planes in R³:
+
+        R(n)
+        =
+        C(n,0)
+        +
+        C(n,1)
+        +
+        C(n,2)
+        +
+        C(n,3)
+
+    Therefore:
+
+        R(n)
+        =
+        1
+        +
+        n
+        +
+        n(n-1)/2
+        +
+        n(n-1)(n-2)/6
+    -->
+
+    <div
+      id="maximum"
+      class="maximum"
+    >
+    </div>
+
+
+    <button
+      id="addPlane"
+      class="add-button"
+      type="button"
+    >
+      + Add Plane
+    </button>
+
+
+    <!-- Dynamically generated plane controls -->
+
+    <div id="planeControls"></div>
+
+
+    <button
+      id="reset"
+      class="reset-button"
+      type="button"
+    >
+      Reset
+    </button>
+
+  </aside>
+
+
+  <!--
+  ================================================================
+  3D CANVAS
+  ================================================================
+  -->
+
+  <main>
+
+    <canvas
+      id="canvas"
+      aria-label="3D visualization of planes dividing space"
+    ></canvas>
+
+
+    <div class="hud">
+
+      <div>
+        Regions:
+        <strong id="hudRegions">1</strong>
+      </div>
+
+      <div>
+        Maximum:
+        <strong id="hudMaximum">1</strong>
+      </div>
+
+      <div>
+        Planes:
+        <strong id="hudPlanes">0</strong>
+      </div>
+
+      <div style="margin-top: 5px; color:#8995a2">
+        Drag → rotate
+        <br>
+        Wheel → zoom
+      </div>
+
+    </div>
+
+  </main>
+
+
+<script>
+
+/*
+================================================================
+3D PLANE ARRANGEMENT VISUALIZER
+================================================================
+
+
+                    R³
+
+             Plane 1
+                /
+               /
+              /
+     --------/----------------
+            /
+           /
+          /
+
+
+A plane is:
+
+              ax + by + cz = d
+
+
+It divides space into two half-spaces:
+
+              ax + by + cz - d > 0
+
+                         +
+                 ─────────────
+                      PLANE
+                 ─────────────
+                         -
+
+              ax + by + cz - d < 0
+
+
+With multiple planes, every point receives a sign vector.
+
+For example, with 3 planes:
+
+       (+,+,+)
+       (+,+,-)
+       (+,-,+)
+       (+,-,-)
+       (-,+,+)
+       (-,+,-)
+       (-,-,+)
+       (-,-,-)
+
+
+Each realizable sign pattern corresponds to one region.
+
+So the problem becomes:
+
+       GEOMETRY
+           ↓
+       sign of every plane
+           ↓
+       sign vector
+           ↓
+       distinct sign vectors
+           ↓
+       regions
+
+
+The maximum number of regions produced by n planes in R³ is:
+
+                 n
+                ┌─┐
+        R(n) =  │ │ C(n,k)
+                │ │
+                k=0
+                └─┘
+
+Because we are in R³, terms above k = 3 vanish:
+
+        R(n)
+        =
+        C(n,0)
+        +
+        C(n,1)
+        +
+        C(n,2)
+        +
+        C(n,3)
+
+
+Therefore:
+
+        R(n)
+        =
+        1
+        +
+        n
+        +
+        n(n-1)/2
+        +
+        n(n-1)(n-2)/6
+
+
+Examples:
+
+        planes       maximum regions
+
+           0              1
+           1              2
+           2              4
+           3              8
+           4             15
+           5             26
+           6             42
+           7             64
+           8             93
+           9            130
+          10            176
+          20           1351
+
+
+IMPORTANT:
+
+The maximum is achieved only when the planes are in general
+position.
+
+Parallel or coincident planes create fewer regions.
+
+
+================================================================
+*/
+
+
+const canvas =
+  document.getElementById("canvas");
+
+const ctx =
+  canvas.getContext("2d");
+
+
+/*
+================================================================
+APPLICATION STATE
+================================================================
+*/
+
+let planes = [];
+
+
+/*
+Camera orientation.
+
+                 z
+                 ↑
+                 |
+                 |
+                 +--------→ x
+                /
+               /
+              y
+
+yaw:
+    rotation around vertical axis
+
+pitch:
+    vertical camera rotation
+
+zoom:
+    size of the 3D world on screen
+*/
+
+let yaw = 0.65;
+
+let pitch = -0.42;
+
+let zoom = 90;
+
+
+/*
+Canvas dimensions.
+*/
+
+let width = 0;
+let height = 0;
+
+
+/*
+Mouse / pointer state.
+*/
+
+let dragging = false;
+
+let lastMouseX = 0;
+
+let lastMouseY = 0;
+
+
+/*
+Different colors for different planes.
+
+We cycle through them when there are more
+planes than colors.
+*/
+
+const planeColors = [
+
+  "#7dd3fc",
+  "#a78bfa",
+  "#fbbf24",
+  "#fb7185",
+  "#34d399",
+  "#f472b6",
+  "#60a5fa",
+  "#facc15",
+  "#fb923c",
+  "#4ade80"
+
+];
+
+
+/*
+================================================================
+DOM REFERENCES
+================================================================
+*/
+
+const regionCount =
+  document.getElementById("regionCount");
+
+const planeCount =
+  document.getElementById("planeCount");
+
+const maximum =
+  document.getElementById("maximum");
+
+const planeControls =
+  document.getElementById("planeControls");
+
+const hudRegions =
+  document.getElementById("hudRegions");
+
+const hudMaximum =
+  document.getElementById("hudMaximum");
+
+const hudPlanes =
+  document.getElementById("hudPlanes");
+
+
+/*
+================================================================
+GENERAL POSITION REGION FORMULA
+================================================================
+
+For n planes in R³:
+
+    R(n)
+    =
+    1
+    +
+    n
+    +
+    C(n,2)
+    +
+    C(n,3)
+
+This function computes the maximum.
+
+================================================================
+*/
+
+function maximumRegions(n) {
+
+  return (
+
+    1
+
+    + n
+
+    + n * (n - 1) / 2
+
+    + n * (n - 1) * (n - 2) / 6
+
+  );
+
+}
+
+
+/*
+================================================================
+CREATE A NEW PLANE
+================================================================
+
+The first few planes are chosen so that they look interesting.
+
+For subsequent planes we generate different orientations
+automatically.
+
+================================================================
+*/
+
+function addPlane() {
+
+  const n = planes.length;
+
+
+  /*
+  Generate a deterministic orientation.
+
+  This is intentionally NOT random.
+
+  Randomness makes educational visualization annoying because
+  refreshing the page can completely change the geometry.
+  Humans already have enough uncertainty in their lives.
+  */
+
+  const angle1 = n * 1.37;
+
+  const angle2 = n * 0.83;
+
+
+  const plane = {
+
+    a: Math.cos(angle1),
+
+    b: Math.sin(angle1),
+
+    c: Math.cos(angle2),
+
+    d: ((n % 7) - 3) * 0.25
+
+  };
+
+
+  planes.push(plane);
+
+
+  rebuildControls();
+
+  update();
+
+  draw();
+
+}
+
+
+/*
+================================================================
+REMOVE PLANE
+================================================================
+*/
+
+function removePlane(index) {
+
+  planes.splice(index, 1);
+
+  rebuildControls();
+
+  update();
+
+  draw();
+
+}
+
+
+/*
+================================================================
+RESET
+================================================================
+*/
+
+function reset() {
+
+  planes = [];
+
+  rebuildControls();
+
+  update();
+
+  draw();
+
+}
+
+
+/*
+================================================================
+BUILD THE PLANE CONTROL UI
+================================================================
+
+For every plane:
+
+       Plane 1
+
+       a ────────────●
+       b ────────────●
+       c ────────────●
+       d ────────────●
+
+The equation is:
+
+       ax + by + cz = d
+
+================================================================
+*/
+
+function rebuildControls() {
+
+  planeControls.innerHTML = "";
+
+
+  planes.forEach((plane, index) => {
+
+    const container =
+      document.createElement("div");
+
+    container.className = "plane";
+
+
+    /*
+    Header
+    */
+
+    const header =
+      document.createElement("div");
+
+    header.className = "plane-header";
+
+
+    const name =
+      document.createElement("div");
+
+    name.className = "plane-name";
+
+    name.textContent =
+      `Plane ${index + 1}`;
+
+
+    const remove =
+      document.createElement("button");
+
+    remove.className =
+      "remove-button";
+
+    remove.type = "button";
+
+    remove.textContent =
+      "Remove";
+
+
+    remove.addEventListener(
+      "click",
+      () => removePlane(index)
+    );
+
+
+    header.appendChild(name);
+
+    header.appendChild(remove);
+
+    container.appendChild(header);
+
+
+    /*
+    Create a,b,c,d controls.
+    */
+
+    ["a", "b", "c", "d"].forEach(
+      parameter => {
+
+        const row =
+          document.createElement("div");
+
+        row.className =
+          "parameter";
+
+
+        const label =
+          document.createElement("span");
+
+        label.textContent =
+          parameter;
+
+
+        /*
+        Slider
+        */
+
+        const slider =
+          document.createElement("input");
+
+        slider.type =
+          "range";
+
+        slider.min =
+          "-3";
+
+        slider.max =
+          "3";
+
+        slider.step =
+          "0.1";
+
+        slider.value =
+          plane[parameter];
+
+
+        /*
+        Numeric input
+        */
+
+        const number =
+          document.createElement("input");
+
+        number.type =
+          "number";
+
+        number.min =
+          "-3";
+
+        number.max =
+          "3";
+
+        number.step =
+          "0.1";
+
+        number.value =
+          plane[parameter];
+
+
+        /*
+        Keep both controls synchronized.
+        */
+
+        function updateValue(value) {
+
+          let v =
+            Number(value);
+
+
+          if (!Number.isFinite(v)) {
+
+            return;
+
+          }
+
+
+          v =
+            Math.max(
+              -3,
+              Math.min(3, v)
+            );
+
+
+          plane[parameter] =
+            v;
+
+
+          slider.value =
+            v;
+
+          number.value =
+            v;
+
+
+          update();
+
+          draw();
+
+        }
+
+
+        slider.addEventListener(
+          "input",
+          () => {
+
+            updateValue(
+              slider.value
+            );
+
+          }
+        );
+
+
+        number.addEventListener(
+          "input",
+          () => {
+
+            updateValue(
+              number.value
+            );
+
+          }
+        );
+
+
+        row.appendChild(label);
+
+        row.appendChild(slider);
+
+        row.appendChild(number);
+
+
+        container.appendChild(row);
+
+      }
+    );
+
+
+    planeControls.appendChild(
+      container
+    );
+
+  });
+
+}
+
+
+/*
+================================================================
+ESTIMATE THE ACTUAL NUMBER OF REGIONS
+================================================================
+
+We sample points throughout a cube.
+
+For each sampled point:
+
+        p = (x,y,z)
+
+we calculate:
+
+        sign(
+          a₁x+b₁y+c₁z-d₁
+        )
+
+        sign(
+          a₂x+b₂y+c₂z-d₂
+        )
+
+        ...
+
+This produces a sign vector:
+
+        (+,-,+,+,-)
+
+We store every unique vector in a Set.
+
+The number of unique vectors gives an estimate of
+the number of regions.
+
+This is a visualization-oriented estimator.
+
+The exact mathematical maximum is calculated separately.
+
+================================================================
+*/
+
+function estimateRegions() {
+
+  if (planes.length === 0) {
+
+    return 1;
+
+  }
+
+
+  const regions =
+    new Set();
+
+
+  /*
+  Sampling cube:
+
+          -2.7 ≤ x,y,z ≤ 2.7
+
+  The real R³ is infinite.
+
+  This cube is merely our microscope.
+  */
+
+  for (
+    let x = -2.7;
+    x <= 2.7;
+    x += 0.35
+  ) {
+
+    for (
+      let y = -2.7;
+      y <= 2.7;
+      y += 0.35
+    ) {
+
+      for (
+        let z = -2.7;
+        z <= 2.7;
+        z += 0.35
+      ) {
+
+
+        let signVector = "";
+
+
+        for (
+          const plane of planes
+        ) {
+
+
+          const value =
+
+            plane.a * x
+
+            + plane.b * y
+
+            + plane.c * z
+
+            - plane.d;
+
+
+          signVector +=
+            value >= 0
+              ? "+"
+              : "-";
+
+        }
+
+
+        regions.add(
+          signVector
+        );
+
+      }
+
+    }
+
+  }
+
+
+  return regions.size;
+
+}
+
+
+/*
+================================================================
+UPDATE COUNTERS
+================================================================
+*/
+
+function update() {
+
+  const actual =
+    estimateRegions();
+
+
+  const maximumPossible =
+    maximumRegions(
+      planes.length
+    );
+
+
+  regionCount.textContent =
+    actual;
+
+
+  planeCount.textContent =
+    planes.length;
+
+
+  maximum.innerHTML =
+
+    `
+      Maximum for ${planes.length} planes:
+      <strong>${maximumPossible}</strong>
+      <br><br>
+      R(n) =
+      1 + n + C(n,2) + C(n,3)
+    `;
+
+
+  hudRegions.textContent =
+    actual;
+
+
+  hudMaximum.textContent =
+    maximumPossible;
+
+
+  hudPlanes.textContent =
+    planes.length;
+
+}
+
+
+/*
+================================================================
+3D PROJECTION
+================================================================
+
+We use a simple orthographic projection.
+
+First rotate around Y:
+
+        x' = x cos(yaw) - z sin(yaw)
+
+        z' = x sin(yaw) + z cos(yaw)
+
+
+Then rotate around X:
+
+        y' = y cos(pitch) - z sin(pitch)
+
+
+Finally:
+
+        screenX = centerX + x' * zoom
+
+        screenY = centerY - y' * zoom
+
+
+This is enough to create a useful interactive mathematical
+visualization without importing an entire 3D engine.
+
+================================================================
+*/
+
+function project(point) {
+
+  const [x, y, z] =
+    point;
+
+
+  /*
+  Rotation around Y.
+  */
+
+  const cosYaw =
+    Math.cos(yaw);
+
+  const sinYaw =
+    Math.sin(yaw);
+
+
+  const x1 =
+    x * cosYaw
+    - z * sinYaw;
+
+
+  const z1 =
+    x * sinYaw
+    + z * cosYaw;
+
+
+  /*
+  Rotation around X.
+  */
+
+  const cosPitch =
+    Math.cos(pitch);
+
+  const sinPitch =
+    Math.sin(pitch);
+
+
+  const y1 =
+    y * cosPitch
+    - z1 * sinPitch;
+
+
+  const z2 =
+    y * sinPitch
+    + z1 * cosPitch;
+
+
+  return {
+
+    x:
+      width / 2
+      + x1 * zoom,
+
+    y:
+      height / 2
+      - y1 * zoom,
+
+    depth:
+      z2
+
+  };
+
+}
+
+
+/*
+================================================================
+BOUNDING CUBE
+================================================================
+
+We cannot draw all of R³.
+
+Instead we show a finite cube:
+
+            +----------------+
+           /|               /|
+          / |              / |
+         +----------------+  |
+         |  |             |  |
+         |  +-------------|--+
+         | /              | /
+         |/               |/
+         +----------------+
+
+The planes are clipped to this cube.
+
+================================================================
+*/
+
+const cubeVertices = [
+
+  [-3, -3, -3],
+  [ 3, -3, -3],
+  [ 3,  3, -3],
+  [-3,  3, -3],
+
+  [-3, -3,  3],
+  [ 3, -3,  3],
+  [ 3,  3,  3],
+  [-3,  3,  3]
+
+];
+
+
+const cubeEdges = [
+
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [3, 0],
+
+  [4, 5],
+  [5, 6],
+  [6, 7],
+  [7, 4],
+
+  [0, 4],
+  [1, 5],
+  [2, 6],
+  [3, 7]
+
+];
+
+
+/*
+================================================================
+PLANE EQUATION
+================================================================
+*/
+
+function planeValue(
+  plane,
+  point
+) {
+
+  return (
+
+    plane.a * point[0]
+
+    + plane.b * point[1]
+
+    + plane.c * point[2]
+
+    - plane.d
+
+  );
+
+}
+
+
+/*
+================================================================
+VECTOR UTILITIES
+================================================================
+*/
+
+function normalize(v) {
+
+  const length =
+    Math.hypot(...v);
+
+
+  if (length === 0) {
+
+    return [0, 0, 0];
+
+  }
+
+
+  return v.map(
+    x => x / length
+  );
+
+}
+
+
+function dot(a, b) {
+
+  return (
+
+    a[0] * b[0]
+
+    + a[1] * b[1]
+
+    + a[2] * b[2]
+
+  );
+
+}
+
+
+function cross(a, b) {
+
+  return [
+
+    a[1] * b[2]
+      - a[2] * b[1],
+
+    a[2] * b[0]
+      - a[0] * b[2],
+
+    a[0] * b[1]
+      - a[1] * b[0]
+
+  ];
+
+}
+
+
+function subtract(a, b) {
+
+  return [
+
+    a[0] - b[0],
+
+    a[1] - b[1],
+
+    a[2] - b[2]
+
+  ];
+
+}
+
+
+/*
+================================================================
+FIND THE POLYGON CREATED BY A PLANE INSIDE THE CUBE
+================================================================
+
+A plane intersects the cube along a polygon.
+
+We inspect every cube edge.
+
+Suppose an edge is:
+
+       A ---------------- B
+
+and:
+
+       f(A) < 0
+       f(B) > 0
+
+Then the plane must cross that edge.
+
+We find the intersection using linear interpolation:
+
+       P = A + t(B-A)
+
+where
+
+       t = f(A)/(f(A)-f(B))
+
+This is a classic computational geometry technique.
+
+================================================================
+*/
+
+function planePolygon(plane) {
+
+  const intersections = [];
+
+
+  for (
+    const [i, j]
+    of cubeEdges
+  ) {
+
+
+    const A =
+      cubeVertices[i];
+
+    const B =
+      cubeVertices[j];
+
+
+    const fA =
+      planeValue(
+        plane,
+        A
+      );
+
+
+    const fB =
+      planeValue(
+        plane,
+        B
+      );
+
+
+    /*
+    Opposite signs mean the edge crosses the plane.
+    */
+
+    if (fA * fB < 0) {
+
+
+      const t =
+        fA /
+        (fA - fB);
+
+
+      intersections.push([
+
+        A[0]
+          + t * (B[0] - A[0]),
+
+        A[1]
+          + t * (B[1] - A[1]),
+
+        A[2]
+          + t * (B[2] - A[2])
+
+      ]);
+
+    }
+
+  }
+
+
+  /*
+  Remove duplicate intersection points.
+  */
+
+  const points = [];
+
+
+  for (
+    const p of intersections
+  ) {
+
+    const exists =
+      points.some(
+        q =>
+          Math.hypot(
+
+            p[0] - q[0],
+
+            p[1] - q[1],
+
+            p[2] - q[2]
+
+          ) < 0.01
+      );
+
+
+    if (!exists) {
+
+      points.push(p);
+
+    }
+
+  }
+
+
+  if (points.length < 3) {
+
+    return points;
+
+  }
+
+
+  /*
+  ================================================================
+  SORT THE POLYGON
+  ================================================================
+
+  The intersection points are unordered.
+
+  We construct two vectors u,v lying inside the plane.
+
+                    v
+                    ↑
+                    |
+                    |
+                    +--------→ u
+                   /
+                  /
+                 n
+
+  n = plane normal.
+
+  Then we project each point onto (u,v) and sort by angle.
+  */
+
+  const center =
+    points
+      .reduce(
+
+        (sum, p) => [
+
+          sum[0] + p[0],
+
+          sum[1] + p[1],
+
+          sum[2] + p[2]
+
+        ],
+
+        [0, 0, 0]
+
+      )
+      .map(
+        x =>
+          x / points.length
+      );
+
+
+  const normal =
+    normalize([
+
+      plane.a,
+
+      plane.b,
+
+      plane.c
+
+    ]);
+
+
+  /*
+  Pick a vector that isn't parallel
+  to the normal.
+  */
+
+  const helper =
+    Math.abs(normal[0]) < 0.9
+
+      ? [1, 0, 0]
+
+      : [0, 1, 0];
+
+
+  const u =
+    normalize(
+      cross(
+        normal,
+        helper
+      )
+    );
+
+
+  const v =
+    cross(
+      normal,
+      u
+    );
+
+
+  /*
+  Sort around centroid.
+  */
+
+  points.sort(
+    (A, B) => {
+
+      const Arelative =
+        subtract(
+          A,
+          center
+        );
+
+
+      const Brelative =
+        subtract(
+          B,
+          center
+        );
+
+
+      const angleA =
+        Math.atan2(
+
+          dot(
+            Arelative,
+            v
+          ),
+
+          dot(
+            Arelative,
+            u
+          )
+
+        );
+
+
+      const angleB =
+        Math.atan2(
+
+          dot(
+            Brelative,
+            v
+          ),
+
+          dot(
+            Brelative,
+            u
+          )
+
+        );
+
+
+      return angleA - angleB;
+
+    }
+  );
+
+
+  return points;
+
+}
+
+
+/*
+================================================================
+DRAW A 3D LINE
+================================================================
+*/
+
+function drawLine(
+  A,
+  B
+) {
+
+  const a =
+    project(A);
+
+  const b =
+    project(B);
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    a.x,
+    a.y
+  );
+
+  ctx.lineTo(
+    b.x,
+    b.y
+  );
+
+  ctx.stroke();
+
+}
+
+
+/*
+================================================================
+MAIN RENDER FUNCTION
+================================================================
+*/
+
+function draw() {
+
+  if (
+    width === 0 ||
+    height === 0
+  ) {
+
+    return;
+
+  }
+
+
+  /*
+  Clear screen.
+  */
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /*
+  ================================================================
+  DRAW COORDINATE AXES
+  ================================================================
+
+              z
+              ↑
+              |
+              |
+              +------------→ x
+             /
+            /
+           ↙
+          y
+  */
+
+  ctx.lineWidth = 1;
+
+  ctx.strokeStyle =
+    "#66727e";
+
+
+  ctx.globalAlpha =
+    0.45;
+
+
+  drawLine(
+    [-3.4, 0, 0],
+    [ 3.4, 0, 0]
+  );
+
+
+  drawLine(
+    [0, -3.4, 0],
+    [0,  3.4, 0]
+  );
+
+
+  drawLine(
+    [0, 0, -3.4],
+    [0, 0,  3.4]
+  );
+
+
+  /*
+  ================================================================
+  DRAW BOUNDING CUBE
+  ================================================================
+  */
+
+  ctx.globalAlpha =
+    0.22;
+
+
+  for (
+    const [a, b]
+    of cubeEdges
+  ) {
+
+    drawLine(
+      cubeVertices[a],
+      cubeVertices[b]
+    );
+
+  }
+
+
+  ctx.globalAlpha =
+    1;
+
+
+  /*
+  ================================================================
+  DRAW PLANES
+  ================================================================
+  */
+
+  planes.forEach(
+    (plane, index) => {
+
+
+      const polygon =
+        planePolygon(
+          plane
+        );
+
+
+      if (
+        polygon.length < 3
+      ) {
+
+        return;
+
+      }
+
+
+      const projected =
+        polygon.map(
+          project
+        );
+
+
+      /*
+      Fill the polygon.
+      */
+
+      ctx.beginPath();
+
+
+      ctx.moveTo(
+        projected[0].x,
+        projected[0].y
+      );
+
+
+      for (
+        let i = 1;
+        i < projected.length;
+        i++
+      ) {
+
+        ctx.lineTo(
+          projected[i].x,
+          projected[i].y
+        );
+
+      }
+
+
+      ctx.closePath();
+
+
+      const color =
+        planeColors[
+          index %
+          planeColors.length
+        ];
+
+
+      /*
+      Transparent fill makes intersecting planes visible.
+      */
+
+      ctx.fillStyle =
+        color + "22";
+
+
+      ctx.strokeStyle =
+        color;
+
+
+      ctx.lineWidth =
+        2;
+
+
+      ctx.fill();
+
+      ctx.stroke();
+
+    }
+  );
+
+
+  /*
+  ================================================================
+  ORIGIN
+  ================================================================
+  */
+
+  const origin =
+    project(
+      [0, 0, 0]
+    );
+
+
+  ctx.fillStyle =
+    "#ffffff";
+
+
+  ctx.beginPath();
+
+
+  ctx.arc(
+    origin.x,
+    origin.y,
+    4,
+    0,
+    Math.PI * 2
+  );
+
+
+  ctx.fill();
+
+
+  /*
+  ================================================================
+  AXIS LABELS
+  ================================================================
+  */
+
+  ctx.font =
+    "12px monospace";
+
+  ctx.fillStyle =
+    "#8d98a5";
+
+
+  const x =
+    project(
+      [3.5, 0, 0]
+    );
+
+
+  const y =
+    project(
+      [0, 3.5, 0]
+    );
+
+
+  const z =
+    project(
+      [0, 0, 3.5]
+    );
+
+
+  ctx.fillText(
+    "x",
+    x.x,
+    x.y
+  );
+
+
+  ctx.fillText(
+    "y",
+    y.x,
+    y.y
+  );
+
+
+  ctx.fillText(
+    "z",
+    z.x,
+    z.y
+  );
+
+}
+
+
+/*
+================================================================
+CANVAS RESIZE
+================================================================
+*/
+
+function resizeCanvas() {
+
+  const devicePixelRatio =
+    window.devicePixelRatio || 1;
+
+
+  width =
+    canvas.clientWidth;
+
+  height =
+    canvas.clientHeight;
+
+
+  canvas.width =
+    width *
+    devicePixelRatio;
+
+
+  canvas.height =
+    height *
+    devicePixelRatio;
+
+
+  ctx.setTransform(
+    devicePixelRatio,
+    0,
+    0,
+    devicePixelRatio,
+    0,
+    0
+  );
+
+
+  draw();
+
+}
+
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
+
+/*
+================================================================
+MOUSE / POINTER ROTATION
+================================================================
+
+Drag:
+
+        mouse movement
+              ↓
+        change yaw/pitch
+              ↓
+        redraw 3D scene
+
+================================================================
+*/
+
+canvas.addEventListener(
+  "pointerdown",
+  event => {
+
+    dragging =
+      true;
+
+
+    lastMouseX =
+      event.clientX;
+
+    lastMouseY =
+      event.clientY;
+
+
+    canvas.setPointerCapture(
+      event.pointerId
+    );
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointermove",
+  event => {
+
+    if (!dragging) {
+
+      return;
+
+    }
+
+
+    const dx =
+      event.clientX
+      - lastMouseX;
+
+
+    const dy =
+      event.clientY
+      - lastMouseY;
+
+
+    yaw +=
+      dx * 0.01;
+
+
+    pitch +=
+      dy * 0.01;
+
+
+    /*
+    Prevent the camera from flipping upside down.
+    */
+
+    pitch =
+      Math.max(
+        -1.45,
+        Math.min(
+          1.45,
+          pitch
+        )
+      );
+
+
+    lastMouseX =
+      event.clientX;
+
+    lastMouseY =
+      event.clientY;
+
+
+    draw();
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointerup",
+  () => {
+
+    dragging =
+      false;
+
+  }
+);
+
+
+/*
+================================================================
+ZOOM
+================================================================
+*/
+
+canvas.addEventListener(
+  "wheel",
+  event => {
+
+    event.preventDefault();
+
+
+    zoom *=
+      Math.exp(
+        -event.deltaY * 0.001
+      );
+
+
+    zoom =
+      Math.max(
+        35,
+        Math.min(
+          180,
+          zoom
+        )
+      );
+
+
+    draw();
+
+  },
+  {
+    passive: false
+  }
+);
+
+
+/*
+================================================================
+BUTTONS
+================================================================
+*/
+
+document
+  .getElementById("addPlane")
+  .addEventListener(
+    "click",
+    addPlane
+  );
+
+
+document
+  .getElementById("reset")
+  .addEventListener(
+    "click",
+    reset
+  );
+
+
+/*
+================================================================
+INITIAL STATE
+================================================================
+
+Start with three mutually perpendicular planes:
+
+        x = 0
+        y = 0
+        z = 0
+
+
+                    z
+                    ↑
+                    |
+              -----+-----
+             /     |    /
+            /      |   /
+           +-------+--→ x
+          /
+         /
+        y
+
+
+These produce:
+
+                  8 regions
+
+because each coordinate can independently be positive
+or negative:
+
+       (+,+,+)
+       (+,+,-)
+       (+,-,+)
+       (+,-,-)
+       (-,+,+)
+       (-,+,-)
+       (-,-,+)
+       (-,-,-)
+
+================================================================
+*/
+
+addPlane();
+
+
+planes[0] = {
+  a: 1,
+  b: 0,
+  c: 0,
+  d: 0
+};
+
+
+addPlane();
+
+
+planes[1] = {
+  a: 0,
+  b: 1,
+  c: 0,
+  d: 0
+};
+
+
+addPlane();
+
+
+planes[2] = {
+  a: 0,
+  b: 0,
+  c: 1,
+  d: 0
+};
+
+
+rebuildControls();
+
+update();
+
+resizeCanvas();
+
+</script>
+
+</body>
+</html>
