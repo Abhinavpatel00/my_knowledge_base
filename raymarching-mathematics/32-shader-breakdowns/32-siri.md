@@ -52,6 +52,7 @@ The important idea is that the shader is not built from one mysterious geometric
 Let the normalized camera direction be
 
 $$
+
 \hat{\omega}
 =
 \frac{2FC-r_{xyy}}{\left\|2FC-r_{xyy}\right\|},
